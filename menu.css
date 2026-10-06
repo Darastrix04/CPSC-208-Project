@@ -1,0 +1,28 @@
+.start,.options,.continue{
+    border: none;
+    background: none;
+    box-shadow: none;
+    outline: none;
+}
+
+.start:hover,.options:hover,.continue:hover {
+    background-color: gray;
+}
+.title{
+    padding-left: 10rem;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+.bg-black {
+    background-color: #000000;
+}
+html, body, .bg-black {
+    background-color: #000000;
+    height: 100%;
+}
+.options{
+
+}
+.align-menu{
+    padding-left: 5rem;
+}
