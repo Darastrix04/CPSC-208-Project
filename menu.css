@@ -1,13 +1,14 @@
-.menu-item{
+.flat-button{
     border: none;
     background: none;
     box-shadow: none;
     outline: none;
+    user-select: none; /*prevents selecting the text on the button*/
 }
-.align-item{
+.align-menu-button{
     padding-left: 5rem;
 }
-.menu-item:hover {
+.flat-button:hover {
     background-color: gray;
 }
 .title{

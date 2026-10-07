@@ -15,20 +15,20 @@ function GameMenu() {
     return (
         <>
         <video className="background-video" autoPlay loop playsInline muted>
-            <source src="ASSETS/VIDEOS/main_menu_background.mp4" type="video/mp4" />                              {/* BACKGROUND VIDEO */}  
+            <source src="ASSETS/VIDEOS/main_menu_background.mp4" type="video/mp4" />                                {/* BACKGROUND VIDEO */}  
         </video>
         <div class="main-menu">
             <div className="h1 title ms-4 text-white">
-                Five Nights at Freddy's                                                                           {/*TITLE*/}
+                Five Nights at Freddy's                                                                             {/*TITLE*/}
             </div>
-            <div className="align-item">
-                <button className="h2 mx-5 my-5 text-white menu-item" onClick={newGame}>NEW GAME</button>         {/*NEW GAME BUTTON*/}
+            <div className="align-menu-button">
+                <button className="h2 mx-5 my-5 text-white flat-button" onClick={newGame}>NEW GAME</button>         {/*NEW GAME BUTTON*/}
             </div>
-            <div className="align-item">
-                <button className="h2 mx-5 my-5 text-white menu-item" onClick={continueGame}>CONTINUE</button>    {/*CONTINUE GAME BUTTON*/}
+            <div className="align-menu-button">
+                <button className="h2 mx-5 my-5 text-white flat-button" onClick={continueGame}>CONTINUE</button>    {/*CONTINUE GAME BUTTON*/}
             </div>
-            <div className="align-item">
-                <button className="h2 mx-5 my-5 text-white menu-item" onClick={optionsMenu}>OPTIONS</button>      {/*OPTIONS BUTTON*/}
+            <div className="align-menu-button">
+                <button className="h2 mx-5 my-5 text-white flat-button" onClick={optionsMenu}>OPTIONS</button>      {/*OPTIONS BUTTON*/}
             </div>
         </div>
         </>
