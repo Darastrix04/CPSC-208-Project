@@ -1,11 +1,13 @@
-.start,.options,.continue{
+.menu-item{
     border: none;
     background: none;
     box-shadow: none;
     outline: none;
 }
-
-.start:hover,.options:hover,.continue:hover {
+.align-item{
+    padding-left: 5rem;
+}
+.menu-item:hover {
     background-color: gray;
 }
 .title{
@@ -13,16 +15,18 @@
     padding-top: 5rem;
     padding-bottom: 5rem;
 }
-.bg-black {
-    background-color: #000000;
+.main-menu {
+    position: relative;
+    overflow: hidden;
 }
-html, body, .bg-black {
-    background-color: #000000;
+#root {
+    width: 100%;
     height: 100%;
 }
-.options{
-
-}
-.align-menu{
-    padding-left: 5rem;
+.background-video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
 }
