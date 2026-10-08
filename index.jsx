@@ -1,3 +1,4 @@
+import { createRoot } from 'react-dom/client';
 function GameMenu() {
     const sfx_click = new Audio('ASSETS/SFX/MENU/sfx_menu_confirm.mp3'); //preloads audio for menu selection
     function newGame() {
@@ -35,8 +36,8 @@ function GameMenu() {
     );
 }
 
-const root = ReactDOM.createRoot(
-    document.getElementById("root")
+const root = createRoot(
+    document.getElementById('root')
 );
 
 root.render(<GameMenu />); //renders main menu
