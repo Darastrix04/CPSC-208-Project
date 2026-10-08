@@ -18,7 +18,7 @@ function GameMenu() {
         <video className="background-video" autoPlay loop playsInline muted>
             <source src="ASSETS/VIDEOS/main_menu_background.mp4" type="video/mp4" />                                {/* BACKGROUND VIDEO */}  
         </video>
-        <div class="main-menu">
+        <div className="main-menu">
             <div className="h1 title ms-4 text-white">
                 Five Nights at Freddy's                                                                             {/*TITLE*/}
             </div>
