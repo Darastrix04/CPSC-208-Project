@@ -30,3 +30,23 @@
     height: 100%;
     object-fit: cover;
 }
+.battery-bar{
+    bottom: 0;
+    left: 0;
+    width: 8vw;
+    height: 4vh;
+}
+.right-switch {
+    position: absolute;
+    right: 0;
+    top: 60%;
+    width: 6vw;
+    height: auto;
+}
+.left-switch {
+    position: absolute;
+    left: 0;
+    top: 60%;
+    width: 6vw;
+    height: auto;
+}
