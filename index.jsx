@@ -5,6 +5,9 @@ sfx_light_on.loop = true;
 function GameMenu() {
     //PROPERTIES
     const [switches, setSwitches] = useState([false, false, false, false]);
+    const [night, setNight] = useState(1);
+    const [time, setTime] = useState(0);
+    const [hr, setHr] = useState(12);
     const sfx_click = new Audio('ASSETS/SFX/MENU/sfx_menu_confirm.mp3'); //preloads audio for menu selection
     const sfx_door_close = new Audio('ASSETS/SFX/office/door/SFXBible_12478.wav');
     const [battery, setBattery] = useState(100); //Sets Battery Energy To 100%
@@ -116,10 +119,36 @@ function GameMenu() {
     /*                                USE EFFECTS / UPDATE TRACKERS                               */
 
 
+
+   /*           Tracks seconds        */
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTime(prev => prev + 1);
+        }, 1000);
+        return () => clearInterval(interval);
+    }
+)
+
+   /*          Adds hours after 90 seconds              */
+    useEffect(() => {
+        if (time % 90 == 0 && time != 0) {
+            setHr(prev => (prev + 1) % 12);
+            if (hr == 6) {
+                setNight(prev => prev + 1);
+            }
+        }
+    }, [time]);
+
+
+
+    useEffect(() => {
+        //trigger ending night cutscene
+    }, [night]);
+
     
 
     // Checks for Updates on Switch toggles and Plays Light SFX 
-       useEffect(() => {
+    useEffect(() => {
         const interval = setInterval(() => {
             useBattery();
         }, 100);
@@ -198,6 +227,9 @@ function GameMenu() {
             </div>
             <div className="align-menu-button">
                 <button className="h2 mx-5 my-5 text-white flat-button" onClick={optionsMenu}>OPTIONS</button>             {/*OPTIONS BUTTON*/}
+            </div>
+            <div className='nightText'>NIGHT: {night}
+                <div className='timeText'>{hr} AM</div>
             </div>
             <div className="position-fixed m-4 battery-bar">
                 <div className="text-white text-center mb-1">Power Left: {Math.round(battery)}%</div>                       {/*BATTERY/POWER USAGE BAR*/}

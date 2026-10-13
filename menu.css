@@ -33,20 +33,35 @@
 .battery-bar{
     bottom: 0;
     left: 0;
-    width: 8vw;
-    height: 4vh;
+    width: 12vw;
+    height: 6vh;
 }
-.right-switch {
+
+.right-switch, .left-switch {
     position: absolute;
+    width: 6vw;
+    height: auto;
+}
+
+.right-switch {
     right: 0;
     top: 60%;
-    width: 6vw;
-    height: auto;
 }
 .left-switch {
-    position: absolute;
     left: 0;
     top: 60%;
-    width: 6vw;
-    height: auto;
+}
+.nightText, timeText{
+    margin: 1rem;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white;
+}
+.nightText{
+    font-size: xx-large;
+}
+.timeText{
+    text-align: center;
+    font-size: large;
 }
