@@ -142,6 +142,8 @@ function GameMenu() {
 
 
     useEffect(() => {
+        setTime(0);
+        setHr(12);
         //trigger ending night cutscene
     }, [night]);
 
