@@ -3,9 +3,15 @@ import { createRoot } from 'react-dom/client';
 const sfx_light_on = new Audio('ASSETS/SFX/office/light/BallastHumMedium2.wav'); //load audio outside of function to prevent issues with overlapping audio
 sfx_light_on.loop = true;
 function GameMenu() {
+    //SAVE FILE
+    const save = JSON.parse(localStorage.getItem("save")) || {
+        night: 1,
+        difficulty: "normal",
+        volume: 100
+    };
     //PROPERTIES
     const [switches, setSwitches] = useState([false, false, false, false]);
-    const [night, setNight] = useState(1);
+    const [night, setNight] = useState(save.night);
     const [time, setTime] = useState(0);
     const [hr, setHr] = useState(12);
     const sfx_click = new Audio('ASSETS/SFX/MENU/sfx_menu_confirm.mp3'); //preloads audio for menu selection
@@ -18,9 +24,6 @@ function GameMenu() {
         RIGHT_DOOR: 2,
         RIGHT_LIGHT: 3
     };
-
-
-
 
 
 
@@ -131,7 +134,7 @@ function GameMenu() {
 
    /*          Adds hours after 90 seconds              */
     useEffect(() => {
-        if (time % 90 == 0 && time != 0) {
+        if (time % 2 == 0 && time != 0) {
             setHr(prev => (prev + 1) % 12);
             if (hr == 6) {
                 setNight(prev => prev + 1);
@@ -142,6 +145,9 @@ function GameMenu() {
 
 
     useEffect(() => {
+        //auto save after night is over
+        save.night = night;
+        localStorage.setItem("save", JSON.stringify(save));
         setTime(0);
         setHr(12);
         //trigger ending night cutscene
@@ -236,7 +242,8 @@ function GameMenu() {
             <div className="position-fixed m-4 battery-bar">
                 <div className="text-white text-center mb-1">Power Left: {Math.round(battery)}%</div>                       {/*BATTERY/POWER USAGE BAR*/}
                 <div className="progress bg-transparent border border-white rounded-3">
-                    <div id="battery-color" className="text-bg-success" style={{ width: `${battery}%` }}/></div>
+                    <div id="battery-color" className="text-bg-success" style={{ width: `${battery}%` }}></div>
+                    </div>
             </div>
             <img src="/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png" id="left_switch" className="left-switch user-select-none" onClick={switchClick}/>
             <img src="/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png" id="right_switch" className="right-switch user-select-none" onClick={switchClick}/>
