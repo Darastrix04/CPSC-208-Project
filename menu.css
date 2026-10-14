@@ -1,4 +1,5 @@
 .flat-button{
+    color:white;
     border: none;
     background: none;
     box-shadow: none;
@@ -12,9 +13,10 @@
     background-color: gray;
 }
 .title{
-    padding-left: 10rem;
+    font-size: 5rem;
+    padding-left: 12rem;
     padding-top: 5rem;
-    padding-bottom: 5rem;
+    padding-bottom: 2rem;
 }
 .main-menu {
     position: relative;
@@ -64,4 +66,21 @@
 .timeText{
     text-align: center;
     font-size: large;
+}
+.settingsText {
+    color: rgb(166, 220, 255);
+    font-size: xx-large;
+    padding-left: 12rem;
+    padding-top: 1rem;
+}
+.delete-button{
+    color:white;
+    background-color: red;
+    border: none;
+    box-shadow: none;
+    outline: none;
+    user-select: none; /*prevents selecting the text on the button*/
+}
+.delete-button:hover{
+    background-color: darkred;
 }

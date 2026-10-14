@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-const sfx_light_on = new Audio('ASSETS/SFX/office/light/BallastHumMedium2.wav'); //load audio outside of function to prevent issues with overlapping audio
-sfx_light_on.loop = true;
+
+//PUT ALL SFX HERE
+const SFX = {
+    light: new Audio('./ASSETS/SFX/office/light/BallastHumMedium2.wav'),
+    click: new Audio('./ASSETS/SFX/MENU/sfx_menu_confirm.mp3'),
+    door_close: new Audio('./ASSETS/SFX/office/door/SFXBible_12478.wav')
+};
+
+
 function GameMenu() {
     //SAVE FILE
     const save = JSON.parse(localStorage.getItem("save")) || {
@@ -11,11 +18,12 @@ function GameMenu() {
     };
     //PROPERTIES
     const [switches, setSwitches] = useState([false, false, false, false]);
-    const [night, setNight] = useState(save.night);
+    const [display, setDisplay] = useState("main"); // displays certain scenes
+    const [night, setNight] = useState(save.night); // night counter
+    const [difficulty, setDifficulty] = useState(save.difficulty); //difficulty variable
+    const [volume, setVolume] = useState(save.volume); //volume variable
     const [time, setTime] = useState(0);
     const [hr, setHr] = useState(12);
-    const sfx_click = new Audio('ASSETS/SFX/MENU/sfx_menu_confirm.mp3'); //preloads audio for menu selection
-    const sfx_door_close = new Audio('ASSETS/SFX/office/door/SFXBible_12478.wav');
     const [battery, setBattery] = useState(100); //Sets Battery Energy To 100%
     //ENUM FOR SWITCHES
     const SWITCH_CONTROL = {
@@ -91,7 +99,8 @@ function GameMenu() {
             }
         }
         if(switches[SWITCH_CONTROL.LEFT_DOOR] != updated[SWITCH_CONTROL.LEFT_DOOR] || switches[SWITCH_CONTROL.RIGHT_DOOR] != updated[SWITCH_CONTROL.RIGHT_DOOR]) {
-            sfx_door_close.play();
+            SFX.door_close.play();
+            SFX.door_close.currentTime = 0;
         }
         setSwitches(updated);
     }
@@ -99,12 +108,12 @@ function GameMenu() {
 
     function light_sfx(){
         if (switches[SWITCH_CONTROL.LEFT_LIGHT] || switches[SWITCH_CONTROL.RIGHT_LIGHT]) {
-            if (sfx_light_on.paused) {
-                sfx_light_on.play();
+            if (SFX.light.paused) {
+                SFX.light.play();
             }
         } else {
-            sfx_light_on.pause();
-            sfx_light_on.currentTime = 0;
+            SFX.light.pause();
+            SFX.light.currentTime = 0;
         }
     }
 
@@ -175,6 +184,23 @@ function GameMenu() {
     }, [battery]);
 
 
+    //updates difficulty based on changes in options menu
+    useEffect(() => {
+        save.difficulty = difficulty;
+        localStorage.setItem("save", JSON.stringify(save));
+    }, [difficulty])
+
+
+    //updates volume based on changes in options menu
+    useEffect(() => {
+        save.volume = volume;
+        localStorage.setItem("save", JSON.stringify(save));
+        Object.values(SFX).forEach(sfx => {
+            sfx.volume = volume / 100;
+        });
+    }, [volume])
+
+
 
 
 
@@ -193,16 +219,16 @@ function GameMenu() {
     /*                            MAIN MENU FUNCTIONS                                    */
 
     function newGame() {
-        sfx_click.play();
+        SFX.click.play();
         //placeholder for action to start a new game
     }
     function continueGame() {
-        sfx_click.play();
+        SFX.click.play();
         //placeholder for action to continue a saved game
     }
     function optionsMenu() {
-        sfx_click.play();
-        //placeholder for action to open the options menu
+        SFX.click.play();
+        setDisplay("options");
     }
 
 
@@ -214,10 +240,8 @@ function GameMenu() {
 
 
 
-
-
-
-
+    switch(display) {
+        case "main":
     return (
         <>
         <video className="background-video" autoPlay loop playsInline muted>
@@ -250,6 +274,44 @@ function GameMenu() {
         </div>
         </>
     );
+    break;
+    case "options":
+        return (
+        <>
+        <video className="background-video" autoPlay loop playsInline muted>
+            <source src="ASSETS/VIDEOS/main_menu_background.mp4" type="video/mp4" />                                       {/* BACKGROUND VIDEO */}  
+        </video>
+        <div className="main-menu">
+            <div id="title" className="h1 title text-white"><button className='flat-button' onClick={() => {SFX.click.play(); setDisplay("main");}}>{'<'}</button>Options</div>
+            <div className="settingsText">CURRENT NIGHT: {save.night}</div>
+            <div className='settingsText'>
+                <div>Difficulty: {save.difficulty}
+                    <button className='flat-button mx-3' onClick={() => {setDifficulty('easy'); SFX.click.play();}}>easy</button>
+                    <button className='flat-button mx-3' onClick={() => {setDifficulty('normal'); SFX.click.play();}}>normal</button>
+                    <button className='flat-button mx-3' onClick={() => {setDifficulty('hard'); SFX.click.play();}}>hard</button>
+                </div>
+            </div>
+            <div className='settingsText'>
+                <div>Volume:
+                    <button className='flat-button mx-5' onClick={() => {setVolume(prev => Math.max(prev - 5, 0)); SFX.click.play();}}>{'<'}</button>
+                    <span>{save.volume}</span>
+                    <button className='flat-button mx-5' onClick={() => {setVolume(prev => Math.min(prev + 5, 100)); SFX.click.play();}}>{'>'}</button>
+                </div>
+            </div>
+            <div className='settingsText'>
+                <button className='delete-button' onClick={() => {
+                    if (window.confirm("Are you sure you want to delete your save?")) {
+                        localStorage.removeItem("save");
+                        SFX.click.play();
+                        }
+                    }
+                    }>DELETE SAVE DATA</button>
+            </div>
+        </div>
+        </>
+    );
+    break;
+}
 }
 
 const root = createRoot(
