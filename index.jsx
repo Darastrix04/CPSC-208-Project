@@ -230,6 +230,55 @@ function GameMenu() {
 
 
 
+    //look around in REACT
+    useEffect(() => {
+    if (display != "game") return;
+
+    const viewport = document.getElementById("viewport");
+    const scene = document.getElementById("scene");
+
+    let targetX = 0;
+    let currentX = 0;
+    let maxPan = 0;
+    let init = false;
+
+    function mouseMovment(event) {
+        const rect = viewport.getBoundingClientRect();
+        const mouseX = Math.max(0, Math.min(1,
+            (event.clientX - rect.left) / rect.width
+        ));
+        targetX = -mouseX * maxPan;
+    }
+
+    function animate() {
+        currentX += (targetX - currentX) * 0.12;
+        scene.style.transform = `translateX(${currentX}px)`;
+        requestAnimationFrame(animate);
+    }
+
+    function updateBounds() {
+        let prevPan = maxPan;
+        maxPan = Math.max(0, scene.offsetWidth - viewport.clientWidth);
+        if (!init) {
+            targetX = -maxPan / 2;
+            currentX = targetX;
+            init = true;
+        } else if (prevPan != maxPan) {
+            if(prevPan > 0){
+                targetX = targetX / prevPan * maxPan;
+                currentX = currentX / prevPan * maxPan;
+            }
+        }
+        scene.style.transform = `translateX(${currentX}px)`;
+    }
+    updateBounds();
+    viewport.addEventListener("mousemove", mouseMovment);
+    document.getElementById("topLayer").addEventListener("load", updateBounds);
+    animate();
+}, [display]);
+
+
+
 
 
 
@@ -289,33 +338,6 @@ function GameMenu() {
                 <button className="h2 mx-5 my-5 text-white flat-button" onClick={optionsMenu}>OPTIONS</button>             {/*OPTIONS BUTTON*/}
             </div>
             </div>
-
-            {/*REMOVE THIS AFTER GETTING PANNING TO WORK IN REACT */}
-            <img
-                    src="/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png"
-                    id="left_switch"
-                    className="left-switch user-select-none"
-                    onPointerDown={switchClick}
-                    onPointerUp={releaseSwitch}
-                    draggable={false}
-                    />
-                    <img
-                    src="/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png"
-                    id="right_switch"
-                    className="right-switch user-select-none"
-                    onPointerDown={switchClick}
-                    onPointerUp={releaseSwitch}
-                    draggable={false}
-                    />
-        <div className="position-fixed m-4 battery-bar">
-            <div className="text-white text-center mb-1">Power Left: {Math.round(battery)}%</div>                       {/*BATTERY/POWER USAGE BAR*/}
-            <div className="progress bg-transparent border border-white rounded-3">
-                <div id="battery-color" className="text-bg-success" style={{ width: `${battery}%` }}></div>
-                </div>
-                </div>
-                <div className='nightText'>NIGHT: {night}
-                    <div className='timeText'>{hr} AM</div>
-                    </div>
         </>
     );
     break;
