@@ -8,7 +8,7 @@ const SFX = {
     door_close: new Audio('./ASSETS/SFX/office/door/SFXBible_12478.wav')
 };
 
-
+SFX.light.loop = true;
 function GameMenu() {
     //SAVE FILE
     const save = JSON.parse(localStorage.getItem("save")) || {
@@ -17,7 +17,7 @@ function GameMenu() {
         volume: 100
     };
     //PROPERTIES
-    const SECONDS = 10; //how many seconds equal 1 hr
+    const SECONDS = 2; //how many seconds equal 1 hr
     const [isSwitchOn, setSwitch] = useState([false, false, false, false]); //switch on or off states
     const [display, setDisplay] = useState("main"); // displays certain scenes
     const [night, setNight] = useState(save.night); // night counter
@@ -61,10 +61,10 @@ function GameMenu() {
         let drainRate = 0;
         for (let i = 0; i < isSwitchOn.length; i++) {
             if (isSwitchOn[i] == true) {
-                if (i < 2) {
-                    drainRate += 0.25; //drain rate for light
+                if (i == SWITCH_CONTROL.LEFT_DOOR || i == SWITCH_CONTROL.RIGHT_DOOR) {
+                    drainRate += 0.5;
                 } else {
-                    drainRate += 0.5; //drain rate for door
+                    drainRate += 0.25;
                 }
             }
         }
@@ -73,15 +73,14 @@ function GameMenu() {
         } else {
             document.getElementById('battery-color').setAttribute("class", "text-bg-success");
         }
-        setBattery(Math.max(0, battery - drainRate)); //Applies battery drain rate and ensures it doesn't go below 0
+        setBattery(prev => Math.max(0, prev - drainRate)); //Applies battery drain rate and ensures it doesn't go below 0
     }
 
 
     /*    CHANGES IMG TO REFLECT CLICKS ON SWITCHES         */
     function toggleSwitch(index, pressed = null) {
         const updated = [...isSwitchOn];
-        updated[index] = pressed === null ? !updated[index] : pressed;
-
+        updated[index] = pressed == null ? !updated[index] : pressed;
         //LEFT SIDE SWITCHES
         if (index == SWITCH_CONTROL.LEFT_DOOR || index == SWITCH_CONTROL.LEFT_LIGHT) {
             if (updated[SWITCH_CONTROL.LEFT_DOOR] && updated[SWITCH_CONTROL.LEFT_LIGHT]) {
@@ -161,7 +160,7 @@ function GameMenu() {
    /*           Tracks seconds        */
     useEffect(() => {
         const interval = setInterval(() => {
-            setTime(time++);
+            setTime(prev => prev + 1);
         }, 1000);
         return () => clearInterval(interval);
     }
@@ -170,9 +169,9 @@ function GameMenu() {
    /*          Adds hour after 90 seconds              */
     useEffect(() => {
         if (time % SECONDS == 0 && time != 0) {
-            setHr((hr + 1) % 12);
+            setHr(prev => (prev + 1) % 12);
             if (hr == 6) {
-                setNight(night + 1);
+                setNight(prev => prev + 1);
             }
         }
     }, [time]);
@@ -180,7 +179,6 @@ function GameMenu() {
 
 
     useEffect(() => {
-        if (display != "game") return;
         save.night = night;
         setTime(0);
         setHr(12);
