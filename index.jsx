@@ -265,11 +265,9 @@ function GameMenu() {
             targetX = -maxPan / 2;
             currentX = targetX;
             init = true;
-        } else if (prevPan != maxPan) {
-            if(prevPan > 0){
-                targetX = targetX / prevPan * maxPan;
-                currentX = currentX / prevPan * maxPan;
-            }
+        } else if (prevPan != maxPan && prevPan > 0) {
+            targetX = targetX / prevPan * maxPan;
+            currentX = currentX / prevPan * maxPan;
         }
         scene.style.transform = `translateX(${currentX}px)`;
     }
