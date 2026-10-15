@@ -276,6 +276,7 @@ function GameMenu() {
     updateBounds();
     viewport.addEventListener("mousemove", mouseMovment);
     document.getElementById("topLayer").addEventListener("load", updateBounds);
+    window.addEventListener("resize", updateBounds);
     animate();
 }, [display]);
 
