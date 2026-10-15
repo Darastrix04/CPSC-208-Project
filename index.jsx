@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 
-//PUT ALL SFX HERE
+//PUT ALL SFX HERE SO THEY CAN BE AFFECTED BY VOLUME CONTROL
 const SFX = {
     light: new Audio('./ASSETS/SFX/office/light/BallastHumMedium2.wav'),
     click: new Audio('./ASSETS/SFX/MENU/sfx_menu_confirm.mp3'),
@@ -17,13 +17,14 @@ function GameMenu() {
         volume: 100
     };
     //PROPERTIES
-    const [switches, setSwitches] = useState([false, false, false, false]);
+    const SECONDS = 90; //how many seconds equal 1 hr
+    const [isSwitchOn, setSwitch] = useState([false, false, false, false]); //switch on or off states
     const [display, setDisplay] = useState("main"); // displays certain scenes
     const [night, setNight] = useState(save.night); // night counter
     const [difficulty, setDifficulty] = useState(save.difficulty); //difficulty variable
     const [volume, setVolume] = useState(save.volume); //volume variable
-    const [time, setTime] = useState(0);
-    const [hr, setHr] = useState(12);
+    const [time, setTime] = useState(0); //seconds counter
+    const [hr, setHr] = useState(12); //hr counter
     const [battery, setBattery] = useState(100); //Sets Battery Energy To 100%
     //ENUM FOR SWITCHES
     const SWITCH_CONTROL = {
@@ -37,6 +38,9 @@ function GameMenu() {
 
 
     /*                   ALL FUNCTIONS TO DO WITH THE SWITCHES AND BATTERY BAR                  */
+
+
+    {/*OPTIONS BUTTON*/}
 
     /*                   CHECKS POS OF CLICKS WITHIN IMG and SENDS INFO TO TOGGLESWITCH FUNCTION           */
     function switchClick(event) {
@@ -56,8 +60,8 @@ function GameMenu() {
     /*      FUNCTION TO DECREMENT BATTERY        */
     function useBattery() {
         let drainRate = 0;
-        for (let i = 0; i < switches.length; i++) {
-            if (switches[i] == true) {
+        for (let i = 0; i < isSwitchOn.length; i++) {
+            if (isSwitchOn[i] == true) {
                 if (i < 2) {
                     drainRate += 0.25; //drain rate for light
                 } else {
@@ -70,13 +74,16 @@ function GameMenu() {
         } else {
             document.getElementById('battery-color').setAttribute("class", "text-bg-success");
         }
-        setBattery(batteryPer => Math.max(0, batteryPer - drainRate)); //Applies battery drain rate and ensures it doesn't go below 0
+        setBattery(Math.max(0, battery - drainRate)); //Applies battery drain rate and ensures it doesn't go below 0
     }
 
-    /*    CHANGES IMG TO REFLECT CLICKS         */
-    function toggleSwitch(index) {
-        const updated = [...switches];
-        updated[index] = !updated[index]; //toggles boolean value
+
+    /*    CHANGES IMG TO REFLECT CLICKS ON SWITCHES         */
+    function toggleSwitch(index, pressed = null) {
+        const updated = [...isSwitchOn];
+        updated[index] = pressed === null ? !updated[index] : pressed;
+
+        //LEFT SIDE SWITCHES
         if (index == SWITCH_CONTROL.LEFT_DOOR || index == SWITCH_CONTROL.LEFT_LIGHT) {
             if (updated[SWITCH_CONTROL.LEFT_DOOR] && updated[SWITCH_CONTROL.LEFT_LIGHT]) {
                 document.getElementById("left_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_on.png";
@@ -87,6 +94,7 @@ function GameMenu() {
             } else {
                 document.getElementById("left_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png";
             }
+        //RIGHT SIDE SWITCHES
         } else {
             if (updated[SWITCH_CONTROL.RIGHT_DOOR] && updated[SWITCH_CONTROL.RIGHT_LIGHT]) {
                 document.getElementById("right_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_on.png";
@@ -98,26 +106,45 @@ function GameMenu() {
                 document.getElementById("right_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png";
             }
         }
-        if(switches[SWITCH_CONTROL.LEFT_DOOR] != updated[SWITCH_CONTROL.LEFT_DOOR] || switches[SWITCH_CONTROL.RIGHT_DOOR] != updated[SWITCH_CONTROL.RIGHT_DOOR]) {
-            SFX.door_close.play();
-            SFX.door_close.currentTime = 0;
-        }
-        setSwitches(updated);
-    }
-
-
-    function light_sfx(){
-        if (switches[SWITCH_CONTROL.LEFT_LIGHT] || switches[SWITCH_CONTROL.RIGHT_LIGHT]) {
-            if (SFX.light.paused) {
-                SFX.light.play();
-            }
+        //VIEWS FROM LIGHT
+        if (updated[SWITCH_CONTROL.LEFT_LIGHT]) {
+            document.getElementById("topLayer").src = "/ASSETS/TEXTURES/OFFICE/office_left_empty.png";
+        } else if (updated[SWITCH_CONTROL.RIGHT_LIGHT]) {
+            document.getElementById("topLayer").src = "/ASSETS/TEXTURES/OFFICE/office_right_empty.png";
         } else {
-            SFX.light.pause();
-            SFX.light.currentTime = 0;
+            document.getElementById("topLayer").src = "/ASSETS/TEXTURES/OFFICE/office_top_layer.png";
+        }
+        //PLAYS DOOR CLOSING SOUND
+        if (isSwitchOn[SWITCH_CONTROL.LEFT_DOOR] != updated[SWITCH_CONTROL.LEFT_DOOR] || isSwitchOn[SWITCH_CONTROL.RIGHT_DOOR] != updated[SWITCH_CONTROL.RIGHT_DOOR]) {
+            playSFX(SFX.door_close);
+        }
+    setSwitch(updated);
+}
+
+
+    //UPON RELEASE OF LIGHT SWITCH REVERT BACK TO OFF
+    function releaseSwitch(event) {
+        if (event.currentTarget.id == "right_switch") {
+            toggleSwitch(SWITCH_CONTROL.RIGHT_LIGHT, false);
+            stopSFX(SFX.light);
+        } else {
+            toggleSwitch(SWITCH_CONTROL.LEFT_LIGHT, false);
+            stopSFX(SFX.light);
         }
     }
 
 
+    function playSFX(audio) {
+        if(!(audio instanceof Audio)) {return;}
+        audio.currentTime = 0;
+        audio.play();
+    }
+
+    function stopSFX(audio) {
+        if(!(audio instanceof Audio)) {return;}
+        audio.currentTime = 0;
+        audio.pause();
+    }
 
     /*////////////////////////////END OF SWITCHES/BATTERY BAR//////////////////////////////////////////////////*/
 
@@ -135,18 +162,18 @@ function GameMenu() {
    /*           Tracks seconds        */
     useEffect(() => {
         const interval = setInterval(() => {
-            setTime(prev => prev + 1);
+            setTime(time++);
         }, 1000);
         return () => clearInterval(interval);
     }
 )
 
-   /*          Adds hours after 90 seconds              */
+   /*          Adds hour after 90 seconds              */
     useEffect(() => {
-        if (time % 2 == 0 && time != 0) {
-            setHr(prev => (prev + 1) % 12);
+        if (time % SECONDS == 0 && time != 0) {
+            setHr((hr + 1) % 12);
             if (hr == 6) {
-                setNight(prev => prev + 1);
+                setNight(night + 1);
             }
         }
     }, [time]);
@@ -154,9 +181,8 @@ function GameMenu() {
 
 
     useEffect(() => {
-        //auto save after night is over
+        if (display != "game") return;
         save.night = night;
-        localStorage.setItem("save", JSON.stringify(save));
         setTime(0);
         setHr(12);
         //trigger ending night cutscene
@@ -164,20 +190,23 @@ function GameMenu() {
 
     
 
-    // Checks for Updates on Switch toggles and Plays Light SFX 
+    // Checks for Updates on Switch toggles 
     useEffect(() => {
         const interval = setInterval(() => {
             useBattery();
         }, 100);
-        light_sfx();
         return () => clearInterval(interval);
-    }, [switches]);
+    }, [isSwitchOn]);
 
 
 
     
     // Checks for Updatses on Battery lvl
        useEffect(() => {
+        //PLAYS AUDIO FOR LIGHT SWITCHES WHILE ON
+        if (isSwitchOn[SWITCH_CONTROL.LEFT_LIGHT] || isSwitchOn[SWITCH_CONTROL.RIGHT_LIGHT]) {
+            playSFX(SFX.light);
+        }
         if (battery == 0) {
             //TRIGGER DEATH ENDING HERE!
         }
@@ -186,18 +215,20 @@ function GameMenu() {
 
     //updates difficulty based on changes in options menu
     useEffect(() => {
-        save.difficulty = difficulty;
-        localStorage.setItem("save", JSON.stringify(save));
-    }, [difficulty])
+    localStorage.setItem("save", JSON.stringify({
+        night: night,
+        difficulty: difficulty,
+        volume: volume
+    }));
+}, [night, difficulty, volume]);
 
 
     //updates volume based on changes in options menu
     useEffect(() => {
-        save.volume = volume;
-        localStorage.setItem("save", JSON.stringify(save));
         Object.values(SFX).forEach(sfx => {
             sfx.volume = volume / 100;
         });
+        save.volume = volume;
     }, [volume])
 
 
@@ -219,15 +250,15 @@ function GameMenu() {
     /*                            MAIN MENU FUNCTIONS                                    */
 
     function newGame() {
-        SFX.click.play();
-        //placeholder for action to start a new game
+        playSFX(SFX.click);
+        setDisplay("game");
     }
     function continueGame() {
-        SFX.click.play();
+        playSFX(SFX.click);
         //placeholder for action to continue a saved game
     }
     function optionsMenu() {
-        SFX.click.play();
+        playSFX(SFX.click);
         setDisplay("options");
     }
 
@@ -239,7 +270,7 @@ function GameMenu() {
 
 
 
-
+   /*                         SWITCH STATEMENTS FOR GOING BETWEEN SCENES                    */
     switch(display) {
         case "main":
     return (
@@ -260,18 +291,34 @@ function GameMenu() {
             <div className="align-menu-button">
                 <button className="h2 mx-5 my-5 text-white flat-button" onClick={optionsMenu}>OPTIONS</button>             {/*OPTIONS BUTTON*/}
             </div>
-            <div className='nightText'>NIGHT: {night}
-                <div className='timeText'>{hr} AM</div>
             </div>
-            <div className="position-fixed m-4 battery-bar">
-                <div className="text-white text-center mb-1">Power Left: {Math.round(battery)}%</div>                       {/*BATTERY/POWER USAGE BAR*/}
-                <div className="progress bg-transparent border border-white rounded-3">
-                    <div id="battery-color" className="text-bg-success" style={{ width: `${battery}%` }}></div>
+
+            {/*REMOVE THIS AFTER GETTING PANNING TO WORK IN REACT */}
+            <img
+                    src="/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png"
+                    id="left_switch"
+                    className="left-switch user-select-none"
+                    onPointerDown={switchClick}
+                    onPointerUp={releaseSwitch}
+                    draggable={false}
+                    />
+                    <img
+                    src="/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png"
+                    id="right_switch"
+                    className="right-switch user-select-none"
+                    onPointerDown={switchClick}
+                    onPointerUp={releaseSwitch}
+                    draggable={false}
+                    />
+        <div className="position-fixed m-4 battery-bar">
+            <div className="text-white text-center mb-1">Power Left: {Math.round(battery)}%</div>                       {/*BATTERY/POWER USAGE BAR*/}
+            <div className="progress bg-transparent border border-white rounded-3">
+                <div id="battery-color" className="text-bg-success" style={{ width: `${battery}%` }}></div>
+                </div>
+                </div>
+                <div className='nightText'>NIGHT: {night}
+                    <div className='timeText'>{hr} AM</div>
                     </div>
-            </div>
-            <img src="/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png" id="left_switch" className="left-switch user-select-none" onClick={switchClick}/>
-            <img src="/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png" id="right_switch" className="right-switch user-select-none" onClick={switchClick}/>
-        </div>
         </>
     );
     break;
@@ -282,27 +329,30 @@ function GameMenu() {
             <source src="ASSETS/VIDEOS/main_menu_background.mp4" type="video/mp4" />                                       {/* BACKGROUND VIDEO */}  
         </video>
         <div className="main-menu">
-            <div id="title" className="h1 title text-white"><button className='flat-button' onClick={() => {SFX.click.play(); setDisplay("main");}}>{'<'}</button>Options</div>
-            <div className="settingsText">CURRENT NIGHT: {save.night}</div>
+            <div id="title" className="h1 title text-white"><button className='flat-button' onClick={() => {playSFX(SFX.click); setDisplay("main");}}>{'<'}</button>Options</div>
+            <div className="settingsText">CURRENT NIGHT: {night}</div>
             <div className='settingsText'>
-                <div>Difficulty: {save.difficulty}
-                    <button className='flat-button mx-3' onClick={() => {setDifficulty('easy'); SFX.click.play();}}>easy</button>
-                    <button className='flat-button mx-3' onClick={() => {setDifficulty('normal'); SFX.click.play();}}>normal</button>
-                    <button className='flat-button mx-3' onClick={() => {setDifficulty('hard'); SFX.click.play();}}>hard</button>
+                <div>Difficulty: {difficulty}
+                    <button className='flat-button mx-3' onClick={() => {setDifficulty('easy'); playSFX(SFX.click);}}>easy</button>
+                    <button className='flat-button mx-3' onClick={() => {setDifficulty('normal'); playSFX(SFX.click);}}>normal</button>          
+                    <button className='flat-button mx-3' onClick={() => {setDifficulty('hard'); playSFX(SFX.click);}}>hard</button>
                 </div>
             </div>
             <div className='settingsText'>
                 <div>Volume:
-                    <button className='flat-button mx-5' onClick={() => {setVolume(prev => Math.max(prev - 5, 0)); SFX.click.play();}}>{'<'}</button>
-                    <span>{save.volume}</span>
-                    <button className='flat-button mx-5' onClick={() => {setVolume(prev => Math.min(prev + 5, 100)); SFX.click.play();}}>{'>'}</button>
+                    <button className='flat-button mx-5' onClick={() => {setVolume(Math.max(volume - 5, 0)); playSFX(SFX.click);}}>{'<'}</button>
+                    <span>{volume}</span>
+                    <button className='flat-button mx-5' onClick={() => {setVolume(Math.min(volume + 5, 100)); playSFX(SFX.click);}}>{'>'}</button>
                 </div>
             </div>
             <div className='settingsText'>
                 <button className='delete-button' onClick={() => {
                     if (window.confirm("Are you sure you want to delete your save?")) {
                         localStorage.removeItem("save");
-                        SFX.click.play();
+                        setNight(1);
+                        setDifficulty("normal");
+                        setVolume(100);
+                        playSFX(SFX.click);
                         }
                     }
                     }>DELETE SAVE DATA</button>
@@ -311,8 +361,53 @@ function GameMenu() {
         </>
     );
     break;
+    case "game":
+    return (
+        <>
+        <div id="viewport">
+            <div id="scene">
+                <img
+                    className="scene-office"
+                    id='topLayer'
+                    src="/ASSETS/TEXTURES/OFFICE/office_top_layer.png"
+                    alt="Game Screen"
+                    draggable={false}
+                />
+                <img
+                    src="/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png"
+                    id="left_switch"
+                    className="left-switch user-select-none"
+                    onPointerDown={switchClick}
+                    onPointerUp={releaseSwitch}
+                    draggable={false}
+                />
+                <img
+                    src="/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png"
+                    id="right_switch"
+                    className="right-switch user-select-none"
+                    onPointerDown={switchClick}
+                    onPointerUp={releaseSwitch}
+                    draggable={false}
+                />
+            </div>
+        </div>
+        <div className="position-fixed m-4 battery-bar">
+            <div className="text-white text-center mb-1">Power Left: {Math.round(battery)}%</div>                       {/*BATTERY/POWER USAGE BAR*/}
+            <div className="progress bg-transparent border border-white rounded-3">
+                <div id="battery-color" className="text-bg-success" style={{ width: `${battery}%` }}></div>
+                </div>
+                </div>
+                <div className='nightText'>NIGHT: {night}
+                    <div className='timeText'>{hr} AM</div>
+                    </div>
+                    </>
+    );
 }
 }
+
+
+
+
 
 const root = createRoot(
     document.getElementById('root')
