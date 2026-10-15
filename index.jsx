@@ -18,6 +18,8 @@ function GameMenu() {
     };
     //PROPERTIES
     const SECONDS = 2; //how many seconds equal 1 hr
+    const DOOR_DRAIN_RATE = 0.5;
+    const LIGHT_DRAIN_RATE = 0.25;
     const [isSwitchOn, setSwitch] = useState([false, false, false, false]); //switch on or off states
     const [display, setDisplay] = useState("main"); // displays certain scenes
     const [night, setNight] = useState(save.night); // night counter
@@ -62,9 +64,9 @@ function GameMenu() {
         for (let i = 0; i < isSwitchOn.length; i++) {
             if (isSwitchOn[i] == true) {
                 if (i == SWITCH_CONTROL.LEFT_DOOR || i == SWITCH_CONTROL.RIGHT_DOOR) {
-                    drainRate += 0.5;
+                    drainRate += DOOR_DRAIN_RATE;
                 } else {
-                    drainRate += 0.25;
+                    drainRate += LIGHT_DRAIN_RATE;
                 }
             }
         }
@@ -337,10 +339,9 @@ function GameMenu() {
             <div className="align-menu-button">
                 <button className="h2 mx-5 my-5 text-white flat-button" onClick={optionsMenu}>OPTIONS</button>             {/*OPTIONS BUTTON*/}
             </div>
-            </div>
+        </div>
         </>
     );
-    break;
     case "options":
         return (
         <>
@@ -379,7 +380,6 @@ function GameMenu() {
         </div>
         </>
     );
-    break;
     case "game":
     return (
         <>
@@ -388,7 +388,7 @@ function GameMenu() {
                 <img
                     className="scene-office"
                     id='topLayer'
-                    src="/ASSETS/TEXTURES/OFFICE/office_top_layer.png"
+                    src="/ASSETS/TEXTURES/OFFICE/office_top_layer.png"                                          /* OFFICE PNG */
                     alt="Game Screen"
                     draggable={false}
                 />
@@ -396,7 +396,7 @@ function GameMenu() {
                     src="/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png"
                     id="left_switch"
                     className="left-switch user-select-none"
-                    onPointerDown={switchClick}
+                    onPointerDown={switchClick}                                                               /*LEFT SIDE SWITCHES*/
                     onPointerUp={releaseSwitch}
                     draggable={false}
                 />
@@ -404,7 +404,7 @@ function GameMenu() {
                     src="/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png"
                     id="right_switch"
                     className="right-switch user-select-none"
-                    onPointerDown={switchClick}
+                    onPointerDown={switchClick}                                                                /*RIGHT SIDE SWITCHES */
                     onPointerUp={releaseSwitch}
                     draggable={false}
                 />
@@ -414,12 +414,12 @@ function GameMenu() {
             <div className="text-white text-center mb-1">Power Left: {Math.round(battery)}%</div>                       {/*BATTERY/POWER USAGE BAR*/}
             <div className="progress bg-transparent border border-white rounded-3">
                 <div id="battery-color" className="text-bg-success" style={{ width: `${battery}%` }}></div>
-                </div>
-                </div>
-                <div className='nightText'>NIGHT: {night}
-                    <div className='timeText'>{hr} AM</div>
-                    </div>
-                    </>
+            </div>
+        </div>
+        <div className='nightText'>NIGHT: {night}
+            <div className='timeText'>{hr} AM</div>                                                                      {/*NIGHT/TIME COUNTER*/}
+        </div>
+        </>
     );
 }
 }
