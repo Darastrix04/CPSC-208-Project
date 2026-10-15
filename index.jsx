@@ -17,7 +17,7 @@ function GameMenu() {
         volume: 100
     };
     //PROPERTIES
-    const SECONDS = 90; //how many seconds equal 1 hr
+    const SECONDS = 10; //how many seconds equal 1 hr
     const [isSwitchOn, setSwitch] = useState([false, false, false, false]); //switch on or off states
     const [display, setDisplay] = useState("main"); // displays certain scenes
     const [night, setNight] = useState(save.night); // night counter
@@ -40,7 +40,6 @@ function GameMenu() {
     /*                   ALL FUNCTIONS TO DO WITH THE SWITCHES AND BATTERY BAR                  */
 
 
-    {/*OPTIONS BUTTON*/}
 
     /*                   CHECKS POS OF CLICKS WITHIN IMG and SENDS INFO TO TOGGLESWITCH FUNCTION           */
     function switchClick(event) {
