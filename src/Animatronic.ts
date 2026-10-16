@@ -13,7 +13,7 @@ class Animatronic {
     }
 
     move(): void {
-        this.position++;
+        //movement here
     }
 
     activate(): void {
