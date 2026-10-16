@@ -101,3 +101,8 @@
 .right-switch {
     right: 0;
 }
+.camera-button{
+    position: absolute;
+    background-color: black;
+
+}

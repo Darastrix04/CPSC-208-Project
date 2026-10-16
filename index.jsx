@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import Freddy from './src/Freddy';
 import { createRoot } from 'react-dom/client';
 
 //PUT ALL SFX HERE SO THEY CAN BE AFFECTED BY VOLUME CONTROL
@@ -18,8 +19,6 @@ function GameMenu() {
     };
     //PROPERTIES
     const SECONDS = 2; //how many seconds equal 1 hr
-    const DOOR_DRAIN_RATE = 0.5;
-    const LIGHT_DRAIN_RATE = 0.25;
     const [isSwitchOn, setSwitch] = useState([false, false, false, false]); //switch on or off states
     const [display, setDisplay] = useState("main"); // displays certain scenes
     const [night, setNight] = useState(save.night); // night counter
@@ -64,9 +63,9 @@ function GameMenu() {
         for (let i = 0; i < isSwitchOn.length; i++) {
             if (isSwitchOn[i] == true) {
                 if (i == SWITCH_CONTROL.LEFT_DOOR || i == SWITCH_CONTROL.RIGHT_DOOR) {
-                    drainRate += DOOR_DRAIN_RATE;
+                    drainRate += 0.5;
                 } else {
-                    drainRate += LIGHT_DRAIN_RATE;
+                    drainRate += 0.25;
                 }
             }
         }
@@ -265,16 +264,17 @@ function GameMenu() {
             targetX = -maxPan / 2;
             currentX = targetX;
             init = true;
-        } else if (prevPan != maxPan && prevPan > 0) {
-            targetX = targetX / prevPan * maxPan;
-            currentX = currentX / prevPan * maxPan;
+        } else if (prevPan != maxPan) {
+            if(prevPan > 0){
+                targetX = targetX / prevPan * maxPan;
+                currentX = currentX / prevPan * maxPan;inital
+            }
         }
         scene.style.transform = `translateX(${currentX}px)`;
     }
     updateBounds();
     viewport.addEventListener("mousemove", mouseMovment);
     document.getElementById("topLayer").addEventListener("load", updateBounds);
-    window.addEventListener("resize", updateBounds);
     animate();
 }, [display]);
 
@@ -313,10 +313,6 @@ function GameMenu() {
     /*////////////////////////////END OF MAIN MENU FUNCTIONS////////////////////////////////*/
 
 
-
-
-
-
    /*                         SWITCH STATEMENTS FOR GOING BETWEEN SCENES                    */
     switch(display) {
         case "main":
@@ -338,9 +334,11 @@ function GameMenu() {
             <div className="align-menu-button">
                 <button className="h2 mx-5 my-5 text-white flat-button" onClick={optionsMenu}>OPTIONS</button>             {/*OPTIONS BUTTON*/}
             </div>
-        </div>
+            </div>
+            
         </>
     );
+    break;
     case "options":
         return (
         <>
@@ -379,6 +377,7 @@ function GameMenu() {
         </div>
         </>
     );
+    break;
     case "game":
     return (
         <>
@@ -387,7 +386,7 @@ function GameMenu() {
                 <img
                     className="scene-office"
                     id='topLayer'
-                    src="/ASSETS/TEXTURES/OFFICE/office_top_layer.png"                                          /* OFFICE PNG */
+                    src="/ASSETS/TEXTURES/OFFICE/office_top_layer.png"
                     alt="Game Screen"
                     draggable={false}
                 />
@@ -395,7 +394,7 @@ function GameMenu() {
                     src="/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png"
                     id="left_switch"
                     className="left-switch user-select-none"
-                    onPointerDown={switchClick}                                                               /*LEFT SIDE SWITCHES*/
+                    onPointerDown={switchClick}
                     onPointerUp={releaseSwitch}
                     draggable={false}
                 />
@@ -403,7 +402,7 @@ function GameMenu() {
                     src="/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png"
                     id="right_switch"
                     className="right-switch user-select-none"
-                    onPointerDown={switchClick}                                                                /*RIGHT SIDE SWITCHES */
+                    onPointerDown={switchClick}
                     onPointerUp={releaseSwitch}
                     draggable={false}
                 />
@@ -413,11 +412,16 @@ function GameMenu() {
             <div className="text-white text-center mb-1">Power Left: {Math.round(battery)}%</div>                       {/*BATTERY/POWER USAGE BAR*/}
             <div className="progress bg-transparent border border-white rounded-3">
                 <div id="battery-color" className="text-bg-success" style={{ width: `${battery}%` }}></div>
-            </div>
-        </div>
-        <div className='nightText'>NIGHT: {night}
-            <div className='timeText'>{hr} AM</div>                                                                      {/*NIGHT/TIME COUNTER*/}
-        </div>
+                </div>
+                <div className='camera-button'>
+                    <img 
+                    className='camera-button' 
+                    src="/ASSETS/TEXTURES/OFFICE/camera_button.png" />
+                </div>
+                </div>
+                <div className='nightText'>NIGHT: {night}
+                    <div className='timeText'>{hr} AM</div>
+                </div>
         </>
     );
 }
