@@ -50,6 +50,19 @@ class Bonnie extends Animatronic{
                 break;
         }
     }
+    getRoomName(): string {
+        switch (this.position) {
+            case 1: return "Stage (CAM 1A)";
+            case 2: return "Dining Area (CAM 1B)";
+            case 3: return "Backstage (CAM 1B)";
+            case 4: return "West Hall Corner (CAM 2A)";
+            case 5: return "Supply Closet (CAM 3)";
+            case 6: return "West Hall Corner (CAM 2B)";
+            case 7: return "West Door";
+            default: return "Office/Attack";
+        }
+
+    }
     override toString(): string {
         return "bonnie";
     }

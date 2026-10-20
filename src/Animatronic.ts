@@ -13,6 +13,7 @@ class Animatronic {
         this.active = false;
         this.difficulty = difficulty;
         this.night = night;
+        this.aiLvl;
     }
 
     canMove(): boolean{
@@ -25,7 +26,9 @@ class Animatronic {
 
 
     move(seconds: number): void {
-
+       if (this.active && this.canMove()) {
+        this.position +=1;
+       }
     }
 
     aiReaval(hr: number): void {
@@ -33,7 +36,8 @@ class Animatronic {
     }
     
     attack(): void {
-        
+        this.active = false; 
+        console.log(this.toString(), "is attacking!");
     }
 
     getNight(): number | undefined {
@@ -53,8 +57,8 @@ class Animatronic {
         }
     }
 
-    getLocation(): void {
-
+    getLocation(): number {
+        return this.position;
     }
 
     activate(): void {

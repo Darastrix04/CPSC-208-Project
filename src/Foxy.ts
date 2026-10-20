@@ -38,6 +38,10 @@ class Foxy extends Animatronic{
         }
     }
 
+    override toString(): string {
+        return "foxy";
+    }
+
 }
 
 

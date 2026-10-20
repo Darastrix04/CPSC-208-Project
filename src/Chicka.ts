@@ -30,8 +30,29 @@ class Chicka extends Animatronic{
     }
 
 
-    override move(): void {
+    override move(seconds: number): void {
+        if (seconds === 5 && this.canMove()) {
+            this.position++;
+        }
         //each character has their own movement variations
+    }
+
+    override aiReaval(hr: number): void {
+        switch(hr) {
+            case 2:
+                this.aiLvl++;
+              break;
+            case 3: 
+                this.aiLvl++;
+                break;
+            case 4: 
+                this.aiLvl++;
+                break;       
+        }
+    }
+
+    override toString(): string {
+        return "chica";
     }
 
 }
