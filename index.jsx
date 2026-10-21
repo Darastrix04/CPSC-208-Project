@@ -1,15 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import Freddy from './src/Freddy';
+import Camera from './src/Camera';
 import { createRoot } from 'react-dom/client';
+import SFX from './src/SFX';
 
-//PUT ALL SFX HERE SO THEY CAN BE AFFECTED BY VOLUME CONTROL
-const SFX = {
-    light: new Audio('./ASSETS/SFX/office/light/BallastHumMedium2.wav'),
-    click: new Audio('./ASSETS/SFX/MENU/sfx_menu_confirm.mp3'),
-    door_close: new Audio('./ASSETS/SFX/office/door/SFXBible_12478.wav')
-};
 
-SFX.light.loop = true;
+const camFeed = new Camera();
+const audioHandler = new SFX();
+
 function GameMenu() {
     //SAVE FILE
     const save = JSON.parse(localStorage.getItem("save")) || {
@@ -115,7 +112,7 @@ function GameMenu() {
         }
         //PLAYS DOOR CLOSING SOUND
         if (isSwitchOn[SWITCH_CONTROL.LEFT_DOOR] != updated[SWITCH_CONTROL.LEFT_DOOR] || isSwitchOn[SWITCH_CONTROL.RIGHT_DOOR] != updated[SWITCH_CONTROL.RIGHT_DOOR]) {
-            playSFX(SFX.door_close);
+            audioHandler.playSFX(audioHandler.SFX.door_close);
         }
     setSwitch(updated);
 }
@@ -125,24 +122,11 @@ function GameMenu() {
     function releaseSwitch(event) {
         if (event.currentTarget.id == "right_switch") {
             toggleSwitch(SWITCH_CONTROL.RIGHT_LIGHT, false);
-            stopSFX(SFX.light);
+            audioHandler.stopSFX(audioHandler.SFX.light);
         } else {
             toggleSwitch(SWITCH_CONTROL.LEFT_LIGHT, false);
-            stopSFX(SFX.light);
+            audioHandler.stopSFX(audioHandler.SFX.light);
         }
-    }
-
-
-    function playSFX(audio) {
-        if(!(audio instanceof Audio)) {return;}
-        audio.currentTime = 0;
-        audio.play();
-    }
-
-    function stopSFX(audio) {
-        if(!(audio instanceof Audio)) {return;}
-        audio.currentTime = 0;
-        audio.pause();
     }
 
     /*////////////////////////////END OF SWITCHES/BATTERY BAR//////////////////////////////////////////////////*/
@@ -203,7 +187,7 @@ function GameMenu() {
        useEffect(() => {
         //PLAYS AUDIO FOR LIGHT SWITCHES WHILE ON
         if (isSwitchOn[SWITCH_CONTROL.LEFT_LIGHT] || isSwitchOn[SWITCH_CONTROL.RIGHT_LIGHT]) {
-            playSFX(SFX.light);
+            audioHandler.playSFX(audioHandler.SFX.light);
         }
         if (battery == 0) {
             //TRIGGER DEATH ENDING HERE!
@@ -223,7 +207,7 @@ function GameMenu() {
 
     //updates volume based on changes in options menu
     useEffect(() => {
-        Object.values(SFX).forEach(sfx => {
+        Object.values(audioHandler.SFX).forEach(sfx => {
             sfx.volume = volume / 100;
         });
         save.volume = volume;
@@ -233,7 +217,18 @@ function GameMenu() {
 
     //look around in REACT
     useEffect(() => {
-    if (display != "game") return;
+        if(display == "camera") {
+            camFeed.show();
+            audioHandler.playSFX(audioHandler.SFX.cam_switch);
+        }
+    if (display != "game") {
+        return;
+    }
+    for (let i = 0; i < isSwitchOn.length; i++) {
+        if (isSwitchOn[i]) {
+            toggleSwitch(i, true);
+        }
+    }
 
     const viewport = document.getElementById("viewport");
     const scene = document.getElementById("scene");
@@ -287,6 +282,7 @@ function GameMenu() {
 
 
 
+
     /*////////////////////////////////////////END OF USE EFFECTS///////////////////////////////////*/
 
 
@@ -297,15 +293,15 @@ function GameMenu() {
     /*                            MAIN MENU FUNCTIONS                                    */
 
     function newGame() {
-        playSFX(SFX.click);
+        audioHandler.playSFX(audioHandler.SFX.click);
         setDisplay("game");
     }
     function continueGame() {
-        playSFX(SFX.click);
+        audioHandler.playSFX(audioHandler.SFX.click);
         //placeholder for action to continue a saved game
     }
     function optionsMenu() {
-        playSFX(SFX.click);
+        audioHandler.playSFX(audioHandler.SFX.click);
         setDisplay("options");
     }
 
@@ -346,20 +342,20 @@ function GameMenu() {
             <source src="ASSETS/VIDEOS/main_menu_background.mp4" type="video/mp4" />                                       {/* BACKGROUND VIDEO */}  
         </video>
         <div className="main-menu">
-            <div id="title" className="h1 title text-white"><button className='flat-button' onClick={() => {playSFX(SFX.click); setDisplay("main");}}>{'<'}</button>Options</div>
+            <div id="title" className="h1 title text-white"><button className='flat-button' onClick={() => {audioHandler.playSFX(audioHandler.SFX.click); setDisplay("main");}}>{'<'}</button>Options</div>
             <div className="settingsText">CURRENT NIGHT: {night}</div>
             <div className='settingsText'>
                 <div>Difficulty: {difficulty}
-                    <button className='flat-button mx-3' onClick={() => {setDifficulty('easy'); playSFX(SFX.click);}}>easy</button>
-                    <button className='flat-button mx-3' onClick={() => {setDifficulty('normal'); playSFX(SFX.click);}}>normal</button>          
-                    <button className='flat-button mx-3' onClick={() => {setDifficulty('hard'); playSFX(SFX.click);}}>hard</button>
+                    <button className='flat-button mx-3' onClick={() => {setDifficulty('easy'); audioHandler.playSFX(audioHandler.SFX.click);}}>easy</button>
+                    <button className='flat-button mx-3' onClick={() => {setDifficulty('normal'); audioHandler.playSFX(audioHandler.SFX.click);}}>normal</button>          
+                    <button className='flat-button mx-3' onClick={() => {setDifficulty('hard'); audioHandler.playSFX(audioHandler.SFX.click);}}>hard</button>
                 </div>
             </div>
             <div className='settingsText'>
                 <div>Volume:
-                    <button className='flat-button mx-5' onClick={() => {setVolume(Math.max(volume - 5, 0)); playSFX(SFX.click);}}>{'<'}</button>
+                    <button className='flat-button mx-5' onClick={() => {setVolume(Math.max(volume - 5, 0)); audioHandler.playSFX(audioHandler.SFX.click);}}>{'<'}</button>
                     <span>{volume}</span>
-                    <button className='flat-button mx-5' onClick={() => {setVolume(Math.min(volume + 5, 100)); playSFX(SFX.click);}}>{'>'}</button>
+                    <button className='flat-button mx-5' onClick={() => {setVolume(Math.min(volume + 5, 100)); audioHandler.playSFX(audioHandler.SFX.click);}}>{'>'}</button>
                 </div>
             </div>
             <div className='settingsText'>
@@ -369,7 +365,7 @@ function GameMenu() {
                         setNight(1);
                         setDifficulty("normal");
                         setVolume(100);
-                        playSFX(SFX.click);
+                        audioHandler.playSFX(audioHandler.SFX.click);
                         }
                     }
                     }>DELETE SAVE DATA</button>
@@ -408,22 +404,55 @@ function GameMenu() {
                 />
             </div>
         </div>
-        <div className="position-fixed m-4 battery-bar">
-            <div className="text-white text-center mb-1">Power Left: {Math.round(battery)}%</div>                       {/*BATTERY/POWER USAGE BAR*/}
-            <div className="progress bg-transparent border border-white rounded-3">
+            <div className="battery-bar-container">
+            <div className="text-white battery-text text-center">Power Left: {Math.round(battery)}%</div>                       {/*BATTERY/POWER USAGE BAR*/}
+            <div className="progress battery-bar bg-transparent border border-white rounded-3">
                 <div id="battery-color" className="text-bg-success" style={{ width: `${battery}%` }}></div>
                 </div>
-                <div className='camera-button'>
-                    <img 
-                    className='camera-button' 
-                    src="/ASSETS/TEXTURES/OFFICE/camera_button.png" />
                 </div>
+                <div className="camera-button">
+                    <img id="cameraMonitor" onClick={()=>{setDisplay("camera");}} src="/ASSETS/TEXTURES/OFFICE/camera_button.png"/>
                 </div>
                 <div className='nightText'>NIGHT: {night}
                     <div className='timeText'>{hr} AM</div>
                 </div>
         </>
     );
+    break;
+    case "camera":
+        return (
+        <>
+        <img className='camera-scene' id='cameraScene' src=''></img>
+        <div className='camera-map' draggable={false}>
+        <img id='selectedMapButton'/>
+        <img className='camera-map-outline' draggable={false} src='/ASSETS/TEXTURES/CAMERA/camera_outline.png'></img>
+        <img className='cam-1a-button' draggable={false} onClick={()=> {camFeed.setCameraFeed("1A");}} src='ASSETS/TEXTURES/CAMERA/camera_buttons/camera_1a_button.png'></img>
+        <img className='cam-1b-button' draggable={false} onClick={()=> {camFeed.setCameraFeed("1B");}} src='ASSETS/TEXTURES/CAMERA/camera_buttons/camera_1b_button.png'></img>
+        <img className='cam-1c-button' draggable={false} onClick={()=> {camFeed.setCameraFeed("1C");}} src='ASSETS/TEXTURES/CAMERA/camera_buttons/camera_1c_button.png'></img>
+        <img className='cam-2a-button' draggable={false} onClick={()=> {camFeed.setCameraFeed("2A");}} src='ASSETS/TEXTURES/CAMERA/camera_buttons/camera_2a_button.png'></img>
+        <img className='cam-2b-button' draggable={false} onClick={()=> {camFeed.setCameraFeed("2B");}} src='ASSETS/TEXTURES/CAMERA/camera_buttons/camera_2b_button.png'></img>
+        <img className='cam-3-button' draggable={false} onClick={()=> {camFeed.setCameraFeed("3");}} src='ASSETS/TEXTURES/CAMERA/camera_buttons/camera_3_button.png'></img>
+        <img className='cam-4a-button' draggable={false} onClick={()=> {camFeed.setCameraFeed("4A");}} src='ASSETS/TEXTURES/CAMERA/camera_buttons/camera_4a_button.png'></img>
+        <img className='cam-4b-button' draggable={false} onClick={()=> {camFeed.setCameraFeed("4B");}} src='ASSETS/TEXTURES/CAMERA/camera_buttons/camera_4b_button.png'></img>
+        <img className='cam-5-button' draggable={false} onClick={()=> {camFeed.setCameraFeed("5");}} src='ASSETS/TEXTURES/CAMERA/camera_buttons/camera_5_button.png'></img>
+        <img className='cam-6-button' draggable={false} onClick={()=> {camFeed.setCameraFeed("6");}} src='ASSETS/TEXTURES/CAMERA/camera_buttons/camera_6_button.png'></img>
+        <img className='cam-7-button' draggable={false} onClick={()=> {camFeed.setCameraFeed("7");}} src='ASSETS/TEXTURES/CAMERA/camera_buttons/camera_7_button.png'></img>
+        <img className='camera-feed-image' draggable={false} id='cameraFeed' src='ASSETS/TEXTURES/CAMERA/camera_map.png'></img>
+        </div>
+        <div className="battery-bar-container">
+            <div className="text-white battery-text text-center">Power Left: {Math.round(battery)}%</div>                       {/*BATTERY/POWER USAGE BAR*/}
+            <div className="progress battery-bar bg-transparent border border-white rounded-3">
+                <div id="battery-color" className="text-bg-success" style={{ width: `${battery}%` }}></div>
+                </div>
+                </div>
+                <div className="camera-button">
+                    <img id="cameraMonitor" onClick={() => { camFeed.close(); setDisplay("game"); audioHandler.playSFX(audioHandler.SFX.cam_down);}} src="/ASSETS/TEXTURES/OFFICE/camera_button.png"/>
+                </div>
+                <div className='nightText'>NIGHT: {night}
+                    <div className='timeText'>{hr} AM</div>
+                </div>
+        </>
+    ); 
 }
 }
 

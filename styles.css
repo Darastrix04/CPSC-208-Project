@@ -46,11 +46,26 @@
     padding-left: 12rem;
     padding-top: 1rem;
 }
+.battery-bar-container {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    width: 11vw;
+    z-index: 115;
+    pointer-events: none;
+}
+
+.battery-text {
+    position: relative;
+    width: 100%;
+    margin-bottom: 0.25rem;
+    color: white;
+}
+
 .battery-bar {
-    bottom: 0;
-    left: 0;
-    width: 12vw;
-    height: 6vh;
+    position: relative;
+    width: 100%;
+    margin: 0;
 }
 .nightText {
     margin: 1rem;
@@ -59,6 +74,7 @@
     right: 0;
     color: white;
     font-size: xx-large;
+    z-index: 101;
 }
 .timeText {
     text-align: center;
@@ -74,6 +90,7 @@
 }
 #scene {
     height: 100%;
+    object-fit: cover;
     width: auto;
     max-width: none;
     position: absolute;
@@ -101,11 +118,158 @@
 .right-switch {
     right: 0;
 }
-.camera-button{
+.camera-scene {
     position: absolute;
-    left: 20%;
-    right: 20%;
-    bottom: 0.5%;
-    background-color: transparent;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    background-image: "ASSETS/TEXTURES/OFFICE/office_top_layer.png";
+    user-select: none;
+    object-fit: cover;
+    z-index: 1;
+}
+.camera-map {
+    position: absolute;
+    right: 3%;
+    bottom: 8%;
+    width: min(35vw, 45vh, 500px);
+    z-index: 2;
+}
 
+.camera-map-outline {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    user-select: none;
+}
+.camera-feed-image {
+    display: block;
+    width: 100%;
+    user-select: none;
+    height: auto;
+}
+.cam-1a-button {
+    left: 30%;
+    top: 6%;
+    position: absolute;
+    width: 10%;
+    height: auto;
+    cursor: pointer;
+    user-select: none;
+    z-index: 3;
+}
+.cam-1b-button {
+    left: 30%;
+    top: 18%;
+    position: absolute;
+    width: 10%;
+    height: auto;
+    cursor: pointer;
+    user-select: none;
+    z-index: 3;
+}
+.cam-1c-button {
+    left: 10%;
+    top: 40%;
+    position: absolute;
+    width: 10%;
+    height: auto;
+    cursor: pointer;
+    user-select: none;
+    z-index: 3;
+}
+
+.cam-2a-button {
+    left: 30%;
+    bottom: 22%;
+    position: absolute;
+    width: 10%;
+    height: auto;
+    user-select: none;
+    cursor: pointer;
+    z-index: 3;
+}
+.cam-2b-button {
+    left: 30%;
+    bottom: 12%;
+    position: absolute;
+    width: 10%;
+    user-select: none;
+    height: auto;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.cam-3-button {
+    left: 8%;
+    bottom: 28%;
+    position: absolute;
+    width: 10%;
+    user-select: none;
+    height: auto;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.cam-4a-button {
+    right: 40%;
+    bottom: 22%;
+    position: absolute;
+    width: 10%;
+    height: auto;
+    user-select: none;
+    cursor: pointer;
+    z-index: 3;
+}
+.cam-4b-button {
+    right: 40%;
+    bottom: 12%;
+    position: absolute;
+    width: 10%;
+    height: auto;
+    user-select: none;
+    cursor: pointer;
+    z-index: 3;
+}
+
+.cam-5-button {
+    left: 0%;
+    top: 28%;
+    position: absolute;
+    width: 10%;
+    height: auto;
+    cursor: pointer;
+    user-select: none;
+    z-index: 3;
+}
+.cam-6-button {
+    right: 8%;
+    bottom: 32%;
+    position: absolute;
+    width: 10%;
+    height: auto;
+    user-select: none;
+    cursor: pointer;
+    z-index: 3;
+}
+.cam-7-button {
+    right: 10%;
+    top: 26%;
+    position: absolute;
+    width: 10%;
+    height: auto;
+    user-select: none;
+    cursor: pointer;
+    z-index: 3;
+}
+.camera-button {
+    position: fixed;
+    left: 50%;
+    bottom: 1%;
+    transform: translateX(-50%);
+    z-index: 4;
+    cursor: pointer;
 }
