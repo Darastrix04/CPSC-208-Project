@@ -21,4 +21,6 @@ public playSFX(audio: HTMLAudioElement) {
         audio.pause();
     }
 }
-export default SFX;
+
+const audioHandler = new SFX();
+export default audioHandler;

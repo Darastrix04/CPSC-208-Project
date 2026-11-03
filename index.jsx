@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import Camera from './src/Camera';
 import { createRoot } from 'react-dom/client';
-import SFX from './src/SFX';
+import audioHandler from './src/SFX';
+import Animatronic from './src/Animatronic';
+import Bonnie from './src/Bonnie';
+import camFeed from './src/Camera';
 
 
-const camFeed = new Camera();
-const audioHandler = new SFX();
+const animatronics = [];
 
 function GameMenu() {
     //SAVE FILE
@@ -45,7 +46,7 @@ function GameMenu() {
         const X = event.clientX - button.left; //gets relative x cord position starting from left of img 
         const Y = event.clientY - button.top; //gets relative y cord position starting from top of img
         if (X >= button.width * 0.20 && X <= button.width * 0.86 && Y >= button.height * 0.16 && Y <= button.height * 0.86) {
-            if (event.currentTarget.id == "right_switch") {
+            if (event.currentTarget.id == "rightSwitch") {
                 toggleSwitch(Y < button.height / 2 ? SWITCH_CONTROL.RIGHT_DOOR : SWITCH_CONTROL.RIGHT_LIGHT);
             } else {
                 toggleSwitch(Y < button.height / 2 ? SWITCH_CONTROL.LEFT_DOOR : SWITCH_CONTROL.LEFT_LIGHT);
@@ -67,9 +68,9 @@ function GameMenu() {
             }
         }
         if(drainRate > 0) {
-            document.getElementById('battery-color').setAttribute("class", "text-bg-danger");
+            document.getElementById('batteryColor').setAttribute("class", "text-bg-danger");
         } else {
-            document.getElementById('battery-color').setAttribute("class", "text-bg-success");
+            document.getElementById('batteryColor').setAttribute("class", "text-bg-success");
         }
         setBattery(prev => Math.max(0, prev - drainRate)); //Applies battery drain rate and ensures it doesn't go below 0
     }
@@ -82,34 +83,47 @@ function GameMenu() {
         //LEFT SIDE SWITCHES
         if (index == SWITCH_CONTROL.LEFT_DOOR || index == SWITCH_CONTROL.LEFT_LIGHT) {
             if (updated[SWITCH_CONTROL.LEFT_DOOR] && updated[SWITCH_CONTROL.LEFT_LIGHT]) {
-                document.getElementById("left_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_on.png";
+                document.getElementById("leftSwitch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_on.png";
             } else if (updated[SWITCH_CONTROL.LEFT_DOOR]) {
-                document.getElementById("left_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_left_door_on.png";
+                document.getElementById("leftSwitch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_left_door_on.png";
             } else if (updated[SWITCH_CONTROL.LEFT_LIGHT]) {
-                document.getElementById("left_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_left_light_on.png";
+                document.getElementById("leftSwitch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_left_light_on.png";
             } else {
-                document.getElementById("left_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png";
+                document.getElementById("leftSwitch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png";
             }
         //RIGHT SIDE SWITCHES
         } else {
             if (updated[SWITCH_CONTROL.RIGHT_DOOR] && updated[SWITCH_CONTROL.RIGHT_LIGHT]) {
-                document.getElementById("right_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_on.png";
+                document.getElementById("rightSwitch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_on.png";
             } else if (updated[SWITCH_CONTROL.RIGHT_DOOR]) {
-                document.getElementById("right_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_right_door_on.png";
+                document.getElementById("rightSwitch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_right_door_on.png";
             } else if (updated[SWITCH_CONTROL.RIGHT_LIGHT]) {
-                document.getElementById("right_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_right_light_on.png";
+                document.getElementById("rightSwitch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_right_light_on.png";
             } else {
-                document.getElementById("right_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png";
+                document.getElementById("rightSwitch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png";
             }
         }
-        //VIEWS FROM LIGHT
+        //UPDATE VIEWS FROM LIGHT
         if (updated[SWITCH_CONTROL.LEFT_LIGHT]) {
-            document.getElementById("topLayer").src = "/ASSETS/TEXTURES/OFFICE/office_left_empty.png";
+            if(animatronics[0].getPos() == "2B") {
+                document.getElementById("topLayer").src = "/ASSETS/TEXTURES/OFFICE/office_bonnie.png";
+            } else {
+                document.getElementById("topLayer").src = "/ASSETS/TEXTURES/OFFICE/office_left_empty.png";
+            }
         } else if (updated[SWITCH_CONTROL.RIGHT_LIGHT]) {
             document.getElementById("topLayer").src = "/ASSETS/TEXTURES/OFFICE/office_right_empty.png";
         } else {
             document.getElementById("topLayer").src = "/ASSETS/TEXTURES/OFFICE/office_top_layer.png";
         }
+
+        //UPDATE VISUAL DOOR STATES
+        if (index == SWITCH_CONTROL.LEFT_DOOR && updated[index] !== isSwitchOn[index]) {
+            toggleDoor("left", updated[index]);
+        }
+        if (index == SWITCH_CONTROL.RIGHT_DOOR && updated[index] !== isSwitchOn[index]) {
+            toggleDoor("right", updated[index]);
+        }
+        
         //PLAYS DOOR CLOSING SOUND
         if (isSwitchOn[SWITCH_CONTROL.LEFT_DOOR] != updated[SWITCH_CONTROL.LEFT_DOOR] || isSwitchOn[SWITCH_CONTROL.RIGHT_DOOR] != updated[SWITCH_CONTROL.RIGHT_DOOR]) {
             audioHandler.playSFX(audioHandler.SFX.door_close);
@@ -120,7 +134,7 @@ function GameMenu() {
 
     //UPON RELEASE OF LIGHT SWITCH REVERT BACK TO OFF
     function releaseSwitch(event) {
-        if (event.currentTarget.id == "right_switch") {
+        if (event.currentTarget.id == "rightSwitch") {
             toggleSwitch(SWITCH_CONTROL.RIGHT_LIGHT, false);
             audioHandler.stopSFX(audioHandler.SFX.light);
         } else {
@@ -133,32 +147,73 @@ function GameMenu() {
 
 
 
+    /*             DOOR ANIMATIONS               */
+    function toggleDoor(door, closing) {
+        const interval = 50;
+        const frames = 8;
+        let currFrame = closing ? 1 : 8;
+        let doorId;
+        let doorImgPath;
+        if (door == "left") {
+            doorId = document.getElementById("leftDoor");
+            doorImgPath = "/ASSETS/TEXTURES/OFFICE/doors/door_left_";
+        } else {
+            doorId = document.getElementById("rightDoor");
+            doorImgPath = "/ASSETS/TEXTURES/OFFICE/doors/door_right_";
+        }
+        function loop() {
+            if (currFrame > frames || currFrame < 1) {
+                clearInterval(animation);
+                doorId.src = `${doorImgPath}${closing ? "closed" : "normal"}.png`;
+                return;
+            }
+            doorId.src = `${doorImgPath}closing_frame_${currFrame}.png`;
+            closing ? currFrame++ : currFrame--;
+        }
+        const animation = setInterval(loop, interval);
+        loop();
+    }
 
 
 
 
 
-    /*                                USE EFFECTS / UPDATE TRACKERS                               */
+
+
+    /*                                USE EFFECTS / HOOKS                               */
 
 
 
    /*           Tracks seconds        */
     useEffect(() => {
-        const interval = setInterval(() => {
-            setTime(prev => prev + 1);
-        }, 1000);
-        return () => clearInterval(interval);
-    }
-)
+        if (display == "game" || display == "camera") {
+            const interval = setInterval(() => {
+                setTime(prev => prev + 1);
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [display]);
 
    /*          Adds hour after 90 seconds              */
     useEffect(() => {
+
+        //Animatronic Movement
+        animatronics.forEach(anim => {
+            if (time % anim.moveInt == 0 && time != 0) {
+                if(anim.canMove()) {
+                    anim.move();
+                    camFeed.setCameraFeed(camFeed.getLastCam());
+                }
+            }
+        });
+
         if (time % SECONDS == 0 && time != 0) {
             setHr(prev => (prev + 1) % 12);
             if (hr == 6) {
                 setNight(prev => prev + 1);
             }
         }
+        
     }, [time]);
 
 
@@ -167,7 +222,9 @@ function GameMenu() {
         save.night = night;
         setTime(0);
         setHr(12);
-        //trigger ending night cutscene
+        if(night > 1) {
+            //trigger ending night cutscene
+        }
     }, [night]);
 
     
@@ -195,7 +252,7 @@ function GameMenu() {
     }, [battery]);
 
 
-    //updates difficulty based on changes in options menu
+    //updates difficulty based on changes in options menu and when night Progresses
     useEffect(() => {
     localStorage.setItem("save", JSON.stringify({
         night: night,
@@ -215,19 +272,10 @@ function GameMenu() {
 
 
 
-    //look around in REACT
+    //look around
     useEffect(() => {
-        if(display == "camera") {
-            camFeed.show();
-            audioHandler.playSFX(audioHandler.SFX.cam_switch);
-        }
     if (display != "game") {
         return;
-    }
-    for (let i = 0; i < isSwitchOn.length; i++) {
-        if (isSwitchOn[i]) {
-            toggleSwitch(i, true);
-        }
     }
 
     const viewport = document.getElementById("viewport");
@@ -294,6 +342,7 @@ function GameMenu() {
 
     function newGame() {
         audioHandler.playSFX(audioHandler.SFX.click);
+        animatronics[0] = new Bonnie(difficulty, night);
         setDisplay("game");
     }
     function continueGame() {
@@ -374,54 +423,53 @@ function GameMenu() {
         </>
     );
     break;
+    case "camera":
     case "game":
     return (
         <>
         <div id="viewport">
             <div id="scene">
                 <img
-                    className="scene-office"
-                    id='topLayer'
-                    src="/ASSETS/TEXTURES/OFFICE/office_top_layer.png"
-                    alt="Game Screen"
-                    draggable={false}
+                className="scene-office"
+                id='topLayer'
+                src="/ASSETS/TEXTURES/OFFICE/office_top_layer.png"
+                alt="Game Screen"
+                draggable={false}
                 />
                 <img
-                    src="/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png"
-                    id="left_switch"
-                    className="left-switch user-select-none"
-                    onPointerDown={switchClick}
-                    onPointerUp={releaseSwitch}
-                    draggable={false}
+                src="/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png"
+                id="leftSwitch"
+                className="left-switch user-select-none"
+                onPointerDown={switchClick}
+                onPointerUp={releaseSwitch}
+                draggable={false}
                 />
                 <img
-                    src="/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png"
-                    id="right_switch"
-                    className="right-switch user-select-none"
-                    onPointerDown={switchClick}
-                    onPointerUp={releaseSwitch}
-                    draggable={false}
+                src="/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png"
+                id="rightSwitch"
+                className="right-switch user-select-none"
+                onPointerDown={switchClick}
+                onPointerUp={releaseSwitch}
+                draggable={false}
                 />
+                <img
+                src="/ASSETS/TEXTURES/OFFICE/doors/door_left_normal.png"
+                id="leftDoor"
+                draggable={false}
+                 />
             </div>
         </div>
             <div className="battery-bar-container">
             <div className="text-white battery-text text-center">Power Left: {Math.round(battery)}%</div>                       {/*BATTERY/POWER USAGE BAR*/}
             <div className="progress battery-bar bg-transparent border border-white rounded-3">
-                <div id="battery-color" className="text-bg-success" style={{ width: `${battery}%` }}></div>
+                <div id="batteryColor" className="text-bg-success" style={{ width: `${battery}%` }}></div>
                 </div>
-                </div>
-                <div className="camera-button">
-                    <img id="cameraMonitor" onClick={()=>{setDisplay("camera");}} src="/ASSETS/TEXTURES/OFFICE/camera_button.png"/>
                 </div>
                 <div className='nightText'>NIGHT: {night}
                     <div className='timeText'>{hr} AM</div>
                 </div>
-        </>
-    );
-    break;
-    case "camera":
-        return (
-        <>
+                <div id="cameraSection">
+
         <img className='camera-scene' id='cameraScene' src=''></img>
         <div className='camera-map' draggable={false}>
         <img id='selectedMapButton'/>
@@ -442,17 +490,34 @@ function GameMenu() {
         <div className="battery-bar-container">
             <div className="text-white battery-text text-center">Power Left: {Math.round(battery)}%</div>                       {/*BATTERY/POWER USAGE BAR*/}
             <div className="progress battery-bar bg-transparent border border-white rounded-3">
-                <div id="battery-color" className="text-bg-success" style={{ width: `${battery}%` }}></div>
+                <div id="batteryColor" className="text-bg-success" style={{ width: `${battery}%` }}></div>
                 </div>
-                </div>
-                <div className="camera-button">
-                    <img id="cameraMonitor" onClick={() => { camFeed.close(); setDisplay("game"); audioHandler.playSFX(audioHandler.SFX.cam_down);}} src="/ASSETS/TEXTURES/OFFICE/camera_button.png"/>
                 </div>
                 <div className='nightText'>NIGHT: {night}
                     <div className='timeText'>{hr} AM</div>
                 </div>
+                </div>
+
+
+                <div className="camera-button">
+    <img
+        id="cameraMonitor"
+        src="/ASSETS/TEXTURES/OFFICE/camera_button.png"
+        onClick={() => {
+            if (display == "game") {
+                camFeed.show();
+                setDisplay("camera");
+            } else {
+                camFeed.close();
+                setDisplay("game");
+                audioHandler.playSFX(audioHandler.SFX.cam_down);
+            }
+        }}
+        draggable={false}
+    />
+</div>
         </>
-    ); 
+    );
 }
 }
 
