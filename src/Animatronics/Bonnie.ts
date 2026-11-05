@@ -1,11 +1,10 @@
 import Animatronic from "./Animatronic";
-import camFeed from "./Camera";
+import camFeed from "../Camera";
 import MoveNode from "./MoveNode";
 
 class Bonnie extends Animatronic{
     private oldSrc: string | undefined;
     readonly moveInt: number = 5;
-    private pos: MoveNode;
 
     constructor(difficulty: number, night: number) {
         super(difficulty, night);
@@ -48,7 +47,11 @@ class Bonnie extends Animatronic{
     }
 
 
-    override move(): void { 
+    override move(): void {
+        if(this.pos == null) {
+            console.log("attempted to move a null Animatronic");
+            return;
+        }
         if(this.oldSrc != null) {
             camFeed.updateCamFeed(this.pos.getName(), this.oldSrc);
         }
@@ -80,10 +83,6 @@ class Bonnie extends Animatronic{
     }
     override toString(): string {
         return "bonnie";
-    }
-
-    public getPos(): string {
-        return this.pos.getName();
     }
 
 }

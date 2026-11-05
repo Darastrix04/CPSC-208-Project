@@ -1,15 +1,11 @@
 {
   "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "babel-plugin-react-compiler": "^1.0.0",
-<<<<<<< Updated upstream
-    "vite": "^8.3.4"
-=======
     "typescript": "^7.0.2",
-    "vite": "^8.3.4",
-    "webpack": "^5.112.2",
-    "webpack-cli": "^7.3.1"
->>>>>>> Stashed changes
+    "vite": "^8.3.4"
   },
   "dependencies": {
     "react": "^19.3.0",
@@ -17,14 +13,8 @@
   },
   "scripts": {
     "dev": "vite",
-<<<<<<< Updated upstream
     "build": "vite build",
     "preview": "vite preview"
-=======
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
->>>>>>> Stashed changes
   },
   "engines": {
     "node": ">=24"

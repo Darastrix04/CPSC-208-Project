@@ -1,5 +1,5 @@
-import { ReactNode, useState } from "react";
-import { PageContext, PageContextType, Pages } from "./PageContext";
+import { useState } from "react";
+import { PageContext, Pages, type PageContextType } from "./PageContext";
 
 
 interface PageProviderProps {

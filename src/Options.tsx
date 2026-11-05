@@ -1,9 +1,11 @@
-import { usePage } from "./PageContext";
+import { useGlobal } from "./GlobalContext";
+import { Pages, usePage } from "./PageContext";
+import audioHandler from "./SFX";
 
 
-export default function Options {
-    const {setCurrentPage} = usePage();
-
+export default function Options() {
+    const {setDisplay} = usePage();
+    const {night, setNight, difficulty, setDifficulty, setVolume, volume} = useGlobal();
 
     return (
         <>
@@ -11,7 +13,7 @@ export default function Options {
             <source src="ASSETS/VIDEOS/main_menu_background.mp4" type="video/mp4" />                                       {/* BACKGROUND VIDEO */}  
         </video>
         <div className="main-menu">
-            <div id="title" className="h1 title text-white"><button className='flat-button' onClick={() => {audioHandler.playSFX(audioHandler.SFX.click); setDisplay("main");}}>{'<'}</button>Options</div>
+            <div id="title" className="h1 title text-white"><button className='flat-button' onClick={() => {audioHandler.playSFX(audioHandler.SFX.click); setDisplay(Pages.MainMenu);}}>{'<'}</button>Options</div>
             <div className="settingsText">CURRENT NIGHT: {night}</div>
             <div className='settingsText'>
                 <div>Difficulty: {difficulty}

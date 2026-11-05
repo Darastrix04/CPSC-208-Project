@@ -1,13 +1,12 @@
 import Animatronic from "./Animatronic";
-
-class Foxy extends Animatronic{
-    readonly moveInt: number = 5020; //interval paused if looking at his camera
-    constructor(position: number, difficulty: number, night: number) {
+class Foxy extends Animatronic {
+    moveInt = 5020; //interval paused if looking at his camera
+    constructor(position, difficulty, night) {
         super(position, difficulty, night);
-        switch(night) {
+        switch (night) {
             case 1:
                 this.aiLvl = 0;
-                break
+                break;
             case 2:
                 this.aiLvl = 1;
                 break;
@@ -28,21 +27,17 @@ class Foxy extends Animatronic{
                 break;
         }
     }
-
-
-    override move(): void {
-        if(this.canMove() && this.position != 4) {
+    move() {
+        if (this.canMove() && this.position != 4) {
             this.position++;
-        } else if(this.position == 4) {
+        }
+        else if (this.position == 4) {
             this.attack();
         }
     }
-
-    override toString(): string {
+    toString() {
         return "foxy";
     }
-
 }
-
-
 export default Foxy;
+//# sourceMappingURL=Foxy.js.map

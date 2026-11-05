@@ -10,11 +10,11 @@ export default function PageController() {
 
     switch(display) {
         case Pages.MainMenu:
-            return <MainMenu />
+            return <MainMenu />;
         case Pages.Game:
-            return <Game />
+            return <Game />;
         case Pages.Options:
-            return <Options />
+            return <Options />;
 
     }
 }

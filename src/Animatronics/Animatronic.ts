@@ -1,13 +1,14 @@
 
 import camFeed from "../Camera";
-import MoveNode from "../MoveNode";
+import type MoveNode from "./MoveNode";
+
 class Animatronic {
     // Properties
     private active: boolean;
     private difficulty: number;
     private night: number;
     aiLvl: number = 0;
-    private pos: MoveNode;
+    protected pos: MoveNode | undefined;
 
 
     constructor(difficulty: number, night: number) {
@@ -28,7 +29,13 @@ class Animatronic {
     }
 
     public getPos(): string {
-        return this.pos.getName();
+        if(this.pos !== undefined) {
+            return this.pos.getName();
+        } else {
+            console.log("position not available");
+            return "position not available";
+        }
+        
     }
 
 
@@ -45,28 +52,28 @@ class Animatronic {
         console.log(this.toString(), "is attacking!");
     }
 
-    getNight(): number | undefined {
+    public getNight(): number | undefined {
         if(this.night != null || this.night != undefined) {
             return this.night;
         }
         return undefined;
     }
 
-    getAiLvl(): number {
+    public getAiLvl(): number {
         return this.aiLvl;
     }
 
-    setAiLvl(lvl: number) {
+    public setAiLvl(lvl: number) {
         if(lvl <= 20 && lvl >= 0) {
             this.aiLvl = lvl;
         }
     }
 
-    activate(): void {
+    public activate(): void {
         this.active = true;
     }
 
-    deactivate(): void {
+    public deactivate(): void {
         this.active = false;
     }
 }

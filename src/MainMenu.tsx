@@ -1,10 +1,8 @@
-import { usePage } from "./PageContext";
+import { Pages, usePage } from "./PageContext";
 
 
-export default function MainMenu() {
-    const {setCurrentPage} = usePage();
-
-
+function MainMenu() {
+    const {setDisplay} = usePage();
     return (
         <>
         <video className="background-video" autoPlay loop playsInline muted>
@@ -15,16 +13,18 @@ export default function MainMenu() {
                 Five Nights at Freddy's                                                                                    {/*TITLE*/}
             </div>
             <div className="align-menu-button">
-                <button className="h2 mx-5 my-5 text-white flat-button" onClick={() => {setCurrentPage("game");}}>NEW GAME</button>               {/*NEW GAME BUTTON*/}
+                <button className="h2 mx-5 my-5 text-white flat-button" onClick={() => {setDisplay(Pages.Game);}}>NEW GAME</button>               {/*NEW GAME BUTTON*/}
             </div>
             <div className="align-menu-button">
-                <button className="h2 mx-5 my-5 text-white flat-button" onClick={() => {setCurrentPage("game");}}>CONTINUE</button>           {/*CONTINUE GAME BUTTON*/}
+                <button className="h2 mx-5 my-5 text-white flat-button" onClick={() => {setDisplay(Pages.Game);}}>CONTINUE</button>           {/*CONTINUE GAME BUTTON*/}
             </div>
             <div className="align-menu-button">
-                <button className="h2 mx-5 my-5 text-white flat-button" onClick={() => {setCurrentPage("options");}}>OPTIONS</button>             {/*OPTIONS BUTTON*/}
+                <button className="h2 mx-5 my-5 text-white flat-button" onClick={() => {setDisplay(Pages.Options);}}>OPTIONS</button>             {/*OPTIONS BUTTON*/}
             </div>
             </div>
             
         </>
     );
 }
+
+export default MainMenu;

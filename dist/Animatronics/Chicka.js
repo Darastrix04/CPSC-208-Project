@@ -1,13 +1,12 @@
 import Animatronic from "./Animatronic";
-
-class Chicka extends Animatronic{
-    readonly moveInt: number = 4980;
-    constructor(difficulty: number, night: number) {
+class Chicka extends Animatronic {
+    moveInt = 4980;
+    constructor(difficulty, night) {
         super(difficulty, night);
-        switch(night) {
+        switch (night) {
             case 1:
                 this.aiLvl = 0;
-                break
+                break;
             case 2:
                 this.aiLvl = 1;
                 break;
@@ -28,31 +27,24 @@ class Chicka extends Animatronic{
                 break;
         }
     }
-
-
-    override move(): void {
-        
+    move() {
     }
-
-    override aiReaval(hr: number): void {
-        switch(hr) {
+    aiReaval(hr) {
+        switch (hr) {
             case 2:
                 this.aiLvl++;
-              break;
-            case 3: 
+                break;
+            case 3:
                 this.aiLvl++;
                 break;
-            case 4: 
+            case 4:
                 this.aiLvl++;
-                break;       
+                break;
         }
     }
-
-    override toString(): string {
+    toString() {
         return "chica";
     }
-
 }
-
-
 export default Chicka;
+//# sourceMappingURL=Chicka.js.map
