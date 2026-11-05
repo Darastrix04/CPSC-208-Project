@@ -44,6 +44,7 @@ class Bonnie extends Animatronic{
         room2A.addNode(room5, room1B, room3, room2B);
         room3.addNode(room2A, room2B);
         room2B.addNode(room3, room2A);
+        this.aiLvl += 3; //remove this after the presentation
         this.pos = room1A;
     }
 

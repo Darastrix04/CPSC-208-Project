@@ -16,7 +16,9 @@ function GameMenu() {
         volume: 100
     };
     //PROPERTIES
-    const SECONDS = 2; //how many seconds equal 1 hr
+    const SECONDS = 90; //how many seconds equal 1 hr
+    const isAtDoor = false;
+    const timeAtDoor = 0;
     const [isSwitchOn, setSwitch] = useState([false, false, false, false]); //switch on or off states
     const [display, setDisplay] = useState("main"); // displays certain scenes
     const [night, setNight] = useState(save.night); // night counter
@@ -61,9 +63,9 @@ function GameMenu() {
         for (let i = 0; i < isSwitchOn.length; i++) {
             if (isSwitchOn[i] == true) {
                 if (i == SWITCH_CONTROL.LEFT_DOOR || i == SWITCH_CONTROL.RIGHT_DOOR) {
-                    drainRate += 0.5;
+                    drainRate += 0.08;
                 } else {
-                    drainRate += 0.25;
+                    drainRate += 0.05;
                 }
             }
         }
@@ -122,6 +124,9 @@ function GameMenu() {
         }
         if (index == SWITCH_CONTROL.RIGHT_DOOR && updated[index] !== isSwitchOn[index]) {
             toggleDoor("right", updated[index]);
+            setTimeout(()=> {
+
+            }, 3000);
         }
         
         //PLAYS DOOR CLOSING SOUND
@@ -196,6 +201,13 @@ function GameMenu() {
 
    /*          Adds hour after 90 seconds              */
     useEffect(() => {
+        // if(isAtDoor) {
+        //     timeAtDoor++;
+        //     if(timeAtDoor > 5) {
+
+        //     }
+        // }
+
 
         //Animatronic Movement
         animatronics.forEach(anim => {
@@ -204,6 +216,12 @@ function GameMenu() {
                     anim.move();
                     camFeed.setCameraFeed(camFeed.getLastCam());
                 }
+                // if(anim.getPos() == "2B") {
+                //     isAtDoor = true;
+                // } else {
+                //     isAtDoor = false;
+                //     timeAtDoor = 0;
+                // }
             }
         });
 
@@ -341,6 +359,9 @@ function GameMenu() {
     /*                            MAIN MENU FUNCTIONS                                    */
 
     function newGame() {
+        setTime(0);
+        setHr(12);
+        setNight(1);
         audioHandler.playSFX(audioHandler.SFX.click);
         animatronics[0] = new Bonnie(difficulty, night);
         setDisplay("game");
@@ -455,7 +476,14 @@ function GameMenu() {
                 <img
                 src="/ASSETS/TEXTURES/OFFICE/doors/door_left_normal.png"
                 id="leftDoor"
+                className='office-door'
                 draggable={false}
+                 />
+                 <img
+                 src="/ASSETS/TEXTURES/OFFICE/doors/door_right_normal.png"
+                 id="rightDoor"
+                 className='office-door'
+                 draggable={false}
                  />
             </div>
         </div>
