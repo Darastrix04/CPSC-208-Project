@@ -1,2 +1,2 @@
-export default function Game(): import("react").JSX.Element;
+export {};
 //# sourceMappingURL=Game.d.ts.map

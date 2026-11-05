@@ -1,4 +1,4 @@
-import Game from "./Game";
+// import Game from "./Game";
 import MainMenu from "./MainMenu";
 import Options from "./Options";
 import { Pages, usePage } from "./PageContext";
@@ -12,7 +12,7 @@ export default function PageController() {
         case Pages.MainMenu:
             return <MainMenu />;
         case Pages.Game:
-            return <Game />;
+            // return <Game />;
         case Pages.Options:
             return <Options />;
 

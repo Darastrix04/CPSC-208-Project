@@ -79,15 +79,6 @@ class Bonnie extends Animatronic {
     toString() {
         return "bonnie";
     }
-    getPos() {
-        if (this.pos !== undefined) {
-            return this.pos.getName();
-        }
-        else {
-            console.log("position not available");
-            return "position not available";
-        }
-    }
 }
 export default Bonnie;
 //# sourceMappingURL=Bonnie.js.map

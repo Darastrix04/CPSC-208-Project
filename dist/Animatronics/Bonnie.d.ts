@@ -6,7 +6,6 @@ declare class Bonnie extends Animatronic {
     move(): void;
     aiReaval(hr: number): void;
     toString(): string;
-    getPos(): string;
 }
 export default Bonnie;
 //# sourceMappingURL=Bonnie.d.ts.map
