@@ -394,9 +394,9 @@ function GameMenu() {
             <div className="align-menu-button">
                 <button className="h2 mx-5 my-5 text-white flat-button" onClick={newGame}>NEW GAME</button>               {/*NEW GAME BUTTON*/}
             </div>
-            <div className="align-menu-button">
-                <button className="h2 mx-5 my-5 text-white flat-button" onClick={continueGame}>CONTINUE</button>           {/*CONTINUE GAME BUTTON*/}
-            </div>
+            {/* <div className="align-menu-button"> */}
+                {/* <button className="h2 mx-5 my-5 text-white flat-button" onClick={continueGame}>CONTINUE</button>           CONTINUE GAME BUTTON */}
+            {/* </div> */}
             <div className="align-menu-button">
                 <button className="h2 mx-5 my-5 text-white flat-button" onClick={optionsMenu}>OPTIONS</button>             {/*OPTIONS BUTTON*/}
             </div>
