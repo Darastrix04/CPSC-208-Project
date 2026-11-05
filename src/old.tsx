@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
+<<<<<<< Updated upstream:index.jsx
 
 //PUT ALL SFX HERE SO THEY CAN BE AFFECTED BY VOLUME CONTROL
 const SFX = {
@@ -12,12 +13,25 @@ const SFX = {
 function GameMenu() {
     //SAVE FILE
     const save = JSON.parse(localStorage.getItem("save")) || {
+=======
+import audioHandler from './SFX';
+import Animatronic from './Animatronics/Animatronic';
+import Bonnie from './Bonnie';
+import camFeed from './Camera';
+//SAVE FILE
+    const save = JSON.parse(localStorage.getItem("save")!) || {
+>>>>>>> Stashed changes:src/old.tsx
         night: 1,
         difficulty: "normal",
         volume: 100
     };
+<<<<<<< Updated upstream:index.jsx
     //PROPERTIES
     const SECONDS = 10; //how many seconds equal 1 hr
+=======
+//PROPERTIES
+    const SECONDS = 2; //how many seconds equal 1 hr
+>>>>>>> Stashed changes:src/old.tsx
     const [isSwitchOn, setSwitch] = useState([false, false, false, false]); //switch on or off states
     const [display, setDisplay] = useState("main"); // displays certain scenes
     const [night, setNight] = useState(save.night); // night counter
@@ -34,6 +48,10 @@ function GameMenu() {
         RIGHT_LIGHT: 3
     };
 
+    let animatronics: Animatronic[];
+
+function GameMenu() {
+
 
 
 
@@ -42,7 +60,7 @@ function GameMenu() {
 
 
     /*                   CHECKS POS OF CLICKS WITHIN IMG and SENDS INFO TO TOGGLESWITCH FUNCTION           */
-    function switchClick(event) {
+    function switchClick(event: MouseEvent) {
         const button = event.currentTarget.getBoundingClientRect(); //gets img position and dimensions
         const X = event.clientX - button.left; //gets relative x cord position starting from left of img 
         const Y = event.clientY - button.top; //gets relative y cord position starting from top of img
@@ -69,22 +87,30 @@ function GameMenu() {
             }
         }
         if(drainRate > 0) {
+<<<<<<< Updated upstream:index.jsx
             document.getElementById('battery-color').setAttribute("class", "text-bg-danger");
         } else {
             document.getElementById('battery-color').setAttribute("class", "text-bg-success");
+=======
+            document.getElementById('batteryColor')!.setAttribute("class", "text-bg-danger");
+        } else {
+            document.getElementById('batteryColor')!.setAttribute("class", "text-bg-success");
+>>>>>>> Stashed changes:src/old.tsx
         }
         setBattery(Math.max(0, battery - drainRate)); //Applies battery drain rate and ensures it doesn't go below 0
     }
 
 
     /*    CHANGES IMG TO REFLECT CLICKS ON SWITCHES         */
-    function toggleSwitch(index, pressed = null) {
+    function toggleSwitch(index: number, pressed = null) {
+        const baseLinePath = "/ASSETS/TEXTURES/OFFICE/switches/";
         const updated = [...isSwitchOn];
         updated[index] = pressed === null ? !updated[index] : pressed;
 
         //LEFT SIDE SWITCHES
         if (index == SWITCH_CONTROL.LEFT_DOOR || index == SWITCH_CONTROL.LEFT_LIGHT) {
             if (updated[SWITCH_CONTROL.LEFT_DOOR] && updated[SWITCH_CONTROL.LEFT_LIGHT]) {
+<<<<<<< Updated upstream:index.jsx
                 document.getElementById("left_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_on.png";
             } else if (updated[SWITCH_CONTROL.LEFT_DOOR]) {
                 document.getElementById("left_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_left_door_on.png";
@@ -92,10 +118,20 @@ function GameMenu() {
                 document.getElementById("left_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_left_light_on.png";
             } else {
                 document.getElementById("left_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png";
+=======
+                document.getElementById("leftSwitch")!.setAttribute("src", `${baseLinePath}switch_left_door&light_on.png`);
+            } else if (updated[SWITCH_CONTROL.LEFT_DOOR]) {
+                document.getElementById("leftSwitch")!.setAttribute("src", `${baseLinePath}switch_left_door_on.png`);
+            } else if (updated[SWITCH_CONTROL.LEFT_LIGHT]) {
+                document.getElementById("leftSwitch")!.setAttribute("src", `${baseLinePath}switch_left_light_on.png`);
+            } else {
+                document.getElementById("leftSwitch")!.setAttribute("src", `${baseLinePath}switch_left_door&light_off.png`);
+>>>>>>> Stashed changes:src/old.tsx
             }
         //RIGHT SIDE SWITCHES
         } else {
             if (updated[SWITCH_CONTROL.RIGHT_DOOR] && updated[SWITCH_CONTROL.RIGHT_LIGHT]) {
+<<<<<<< Updated upstream:index.jsx
                 document.getElementById("right_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_on.png";
             } else if (updated[SWITCH_CONTROL.RIGHT_DOOR]) {
                 document.getElementById("right_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_right_door_on.png";
@@ -103,6 +139,15 @@ function GameMenu() {
                 document.getElementById("right_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_right_light_on.png";
             } else {
                 document.getElementById("right_switch").src = "/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png";
+=======
+                document.getElementById("rightSwitch")!.setAttribute("src", `${baseLinePath}switch_right_door&light_on.png`);
+            } else if (updated[SWITCH_CONTROL.RIGHT_DOOR]) {
+                document.getElementById("rightSwitch")!.setAttribute("src", `${baseLinePath}switch_right_door_on.png`);
+            } else if (updated[SWITCH_CONTROL.RIGHT_LIGHT]) {
+                document.getElementById("rightSwitch")!.setAttribute("src", `${baseLinePath}switch_right_light_on.png`);
+            } else {
+                document.getElementById("rightSwitch")!.setAttribute("src", `${baseLinePath}switch_right_door&light_off.png`);
+>>>>>>> Stashed changes:src/old.tsx
             }
         }
         //VIEWS FROM LIGHT
