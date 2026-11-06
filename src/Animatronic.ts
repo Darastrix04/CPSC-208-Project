@@ -1,41 +1,41 @@
+
+import camFeed from "./Camera";
 class Animatronic {
     // Properties
-    position: number;
-    active: boolean;
-    difficulty: number;
-    night: number;
+    private active: boolean;
+    private difficulty: number;
+    private night: number;
     aiLvl: number = 0;
     
 
 
-    constructor(position: number, difficulty: number, night: number) {
-        this.position = position;
+    constructor(difficulty: number, night: number) {
         this.active = false;
         this.difficulty = difficulty;
         this.night = night;
         this.aiLvl;
     }
 
-    canMove(): boolean{
+    public canMove(): boolean{
         let rand : number = Math.round(Math.random() * 20);
         if (rand <= this.aiLvl) {
+            console.log("is able to move");
             return true;
         }
+        console.log("Attmepted to move");
         return false;
     }
 
 
-    move(seconds: number): void {
-       if (this.active && this.canMove()) {
-        this.position +=1;
-       }
+    public move(): void {
+
     }
 
-    aiReaval(hr: number): void {
+    public aiReaval(hr: number): void {
 
     }
     
-    attack(): void {
+    public attack(): void {
         this.active = false; 
         console.log(this.toString(), "is attacking!");
     }
@@ -55,10 +55,6 @@ class Animatronic {
         if(lvl <= 20 && lvl >= 0) {
             this.aiLvl = lvl;
         }
-    }
-
-    getLocation(): number {
-        return this.position;
     }
 
     activate(): void {

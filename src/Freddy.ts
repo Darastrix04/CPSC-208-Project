@@ -3,8 +3,8 @@ import Animatronic from "./Animatronic";
 class Freddy extends Animatronic{
     readonly moveInt: number = 3020;
 
-    constructor(position: number, difficulty: number, night: number) {
-        super(position, difficulty, night);
+    constructor(difficulty: number, night: number) {
+        super(difficulty, night);
         switch (night) {
             case 1: 
                 this.aiLvl = 0;
@@ -31,10 +31,8 @@ class Freddy extends Animatronic{
         }
     }
 
-    override move(seconds: number): void {
-       if (seconds === 5 && this.canMove()) {
-            this.position++;
-        }
+    override move(): void {
+       
     }
 
     override toString(): string {

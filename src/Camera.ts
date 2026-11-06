@@ -1,8 +1,7 @@
-import SFX from "./SFX";
+import audioHandler from "./SFX";
 class Camera {
     private lastCam: string = "1A";
-    private cameras = new Map<string, string>();
-    public camBlip = new Audio('ASSETS/SFX/cameras/blip3.wav');
+    public cameras = new Map<string, string>();
 
     
     constructor() {
@@ -18,29 +17,49 @@ class Camera {
         this.cameras.set("6", "ASSETS/TEXTURES/OFFICE/office_bottom_layer.png");
         this.cameras.set("7", "ASSETS/TEXTURES/CAMERA/restrooms/restrooms_empty.png");
     }
-
-   public show() {
-        let cameraMonitor = document.getElementById("cameraScene") as HTMLImageElement;
+    public show(): void {
+        const cameraSection = document.getElementById("cameraSection");
+        const cameraMonitor = document.getElementById("cameraScene") as HTMLImageElement | null;
+        const cameraMap = cameraSection?.querySelector<HTMLElement>(".camera-map");
+        if (!cameraSection || !cameraMonitor) {
+            return;
+        }
+        cameraSection.style.display = "block";
+        cameraSection.style.visibility = "visible";
+        if (cameraMap) { 
+            cameraMap.style.visibility = "hidden";
+        }
         let frame = 1;
         const animation = setInterval(() => {
-            cameraMonitor.src = `ASSETS/TEXTURES/CAMERA/cam_flippa_annimation/camera_flip_${frame}.png`;
+            cameraMonitor.src = `/ASSETS/TEXTURES/CAMERA/cam_flippa_annimation/camera_flip_${frame}.png`;
             frame++;
             if (frame > 10) {
                 clearInterval(animation);
                 cameraMonitor.src = this.getCamFeed(this.lastCam) ?? "";
+                if (cameraMap) {
+                    cameraMap.style.visibility = "visible";
+                } 
             }
         }, 30);
     }
-
-    public close() {
-        let cameraMonitor = document.getElementById("cameraScene") as HTMLImageElement;
+    public close(): void {
+        const cameraSection = document.getElementById("cameraSection");
+        const cameraMonitor = document.getElementById("cameraScene") as HTMLImageElement | null;
+        const cameraMap = cameraSection?.querySelector<HTMLElement>(".camera-map");
+        if (!cameraSection || !cameraMonitor) {
+            return;
+        }
+        if (cameraMap) {
+            cameraMap.style.visibility = "hidden";
+        }
         let frame = 10;
-        
         const animation = setInterval(() => {
-            cameraMonitor.src = `ASSETS/TEXTURES/CAMERA/cam_flippa_annimation/camera_flip_${frame}.png`;
+            cameraMonitor.src = `/ASSETS/TEXTURES/CAMERA/cam_flippa_annimation/camera_flip_${frame}.png`
             frame--;
             if (frame < 1) {
                 clearInterval(animation);
+                cameraSection.style.visibility = "hidden";
+                cameraSection.style.display = "none";
             }
         }, 30);
     }
@@ -50,21 +69,21 @@ class Camera {
         return this.cameras.get(cam);
     }
 
-    public setAudioLvl(volume: number) {
-        if (volume >= 1 || volume <= 100) {
-            this.camBlip.volume = volume;
-        }
-    }
-
-
-    public setCameraFeed(cam: string, volume: number) {
+    public setCameraFeed(cam: string) {
         if (cam != this.lastCam) {
+            audioHandler.playSFX(audioHandler.SFX.cam_switch);
+        }
             this.lastCam = cam;
             let cameraMonitor = document.getElementById("cameraScene") as HTMLImageElement;
-            this.camBlip.play();
             cameraMonitor.src = this.cameras.get(cam) ?? "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_everyone.png";
-        }
+    }
+
+    public updateCamFeed(cam: string, src: string) {
+        this.cameras.set(cam, src);
+    }
+    public getLastCam(): string {
+        return this.lastCam;
     }
 }
-
-export default Camera;
+const camFeed = new Camera();
+export default camFeed;

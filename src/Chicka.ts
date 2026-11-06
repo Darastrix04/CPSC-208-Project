@@ -2,8 +2,8 @@ import Animatronic from "./Animatronic";
 
 class Chicka extends Animatronic{
     readonly moveInt: number = 4980;
-    constructor(position: number, difficulty: number, night: number) {
-        super(position, difficulty, night);
+    constructor(difficulty: number, night: number) {
+        super(difficulty, night);
         switch(night) {
             case 1:
                 this.aiLvl = 0;
@@ -30,11 +30,8 @@ class Chicka extends Animatronic{
     }
 
 
-    override move(seconds: number): void {
-        if (seconds === 5 && this.canMove()) {
-            this.position++;
-        }
-        //each character has their own movement variations
+    override move(): void {
+        
     }
 
     override aiReaval(hr: number): void {
