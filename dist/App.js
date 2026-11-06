@@ -8,7 +8,7 @@ import GlobalProvider from "./GlobalProvider";
 function App() {
     return (_jsx(PageProvider, { children: _jsx(GlobalProvider, { children: _jsx(PageController, {}) }) }));
 }
-const main = document.getElementById('main');
+const main = document.getElementById("main");
 if (main) {
     const root = createRoot(main);
     root.render(_jsx(React.StrictMode, { children: _jsx(App, {}) }));
