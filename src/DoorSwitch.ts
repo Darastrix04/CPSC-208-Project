@@ -1,8 +1,11 @@
+import Door from "./Door";
+
 export default class DoorSwitch {
     private switch: HTMLImageElement;
     private isDoorClosed: boolean = false;
     private isLightOn: boolean = false;
     private side: string;
+    private door: Door;
 
     constructor(switchSide: HTMLImageElement) {
         if(switchSide.id == "leftSwitch") {
@@ -10,6 +13,7 @@ export default class DoorSwitch {
         } else {
             this.side = "right";
         }
+        this.door = new Door(document.getElementById(`${this.side}Door`) as HTMLImageElement);
         this.switch = switchSide;
     }
     public checkClickPostion(X: number, Y: number, isLightRelease: boolean) {
@@ -36,6 +40,7 @@ export default class DoorSwitch {
     
 
     public toggleDoor(): void {
+        this.door.toggleDoor();
         this.isDoorClosed = !this.isDoorClosed;
     }
 
@@ -49,14 +54,20 @@ export default class DoorSwitch {
         const basedLinePath = "/ASSETS/TEXTURES/OFFICE/switches/switch_"
             if (this.isLightOn && this.isDoorClosed) {
                 this.switch.src = `${basedLinePath}${this.side}_door&light_on.png`;
+                document.getElementById("topLayer")!.setAttribute("src", `/ASSETS/TEXTURES/OFFICE/office_${this.side}_empty.png`);
             } else if (this.isDoorClosed) {
                 this.switch.src = `${basedLinePath}${this.side}_door_on.png`;
             } else if (this.isLightOn) {
                 this.switch.src = `${basedLinePath}${this.side}_light_on.png`;
+                document.getElementById("topLayer")!.setAttribute("src", `/ASSETS/TEXTURES/OFFICE/office_${this.side}_empty.png`);
             } else {
                 this.switch.src = `${basedLinePath}${this.side}_door&light_off.png`;
             }
-        }
+    }
+
+    private officeLightUpdates(): void {
+
+    }
 
     //     //UPDATE VIEWS FROM LIGHT
     //     if (updated[SWITCH_CONTROL.LEFT_LIGHT]) {

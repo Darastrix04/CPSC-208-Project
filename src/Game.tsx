@@ -5,6 +5,8 @@ import { useGlobal } from "./GlobalContext";
 import audioHandler from "./SFX";
 import camFeed from "./Camera";
 import DoorSwitch from "./DoorSwitch";
+import Door from "./Door";
+import { useGame } from "./GameContext";
 
 
 
@@ -12,11 +14,8 @@ export default function Game() {
 
     const {setDisplay, display} = usePage();
     const {night, setNight, volume} = useGlobal();
-    const [time, setTime] = useState(0); //seconds counter
-    const [hr, setHr] = useState(12); //hr counter
-    const [battery, setBattery] = useState(100); //Sets Battery Energy To 100%
-    const SECONDS = 2; //how many seconds equal 1 hr
-    let isUsingCam = false;
+    const {setHr, hr,SECONDS,time, setTime,battery,setBattery} = useGame();
+    let {isUsingCam} = useGame();
     let animatronics: Animatronic[];
     let leftSwitch: DoorSwitch;
     let rightSwitch: DoorSwitch;
@@ -26,8 +25,10 @@ export default function Game() {
         if (display != Pages.Game) {
             return;
         }
+        //DOOR SWITCHES
         leftSwitch = new DoorSwitch(document.getElementById("leftSwitch") as HTMLImageElement);
         rightSwitch = new DoorSwitch(document.getElementById("rightSwitch") as HTMLImageElement);
+        //DOORS
     
         const viewport = document.getElementById("viewport");
         const scene = document.getElementById("scene");
@@ -103,8 +104,15 @@ export default function Game() {
                 <img
                 src="/ASSETS/TEXTURES/OFFICE/doors/door_left_normal.png"
                 id="leftDoor"
+                className='office-door'
                 draggable={false}
-                 />
+                />
+                <img
+                src="/ASSETS/TEXTURES/OFFICE/doors/door_right_normal.png"
+                id="rightDoor"
+                className='office-door'
+                draggable={false}
+                />
             </div>
         </div>
             <div className="battery-bar-container">

@@ -19,8 +19,6 @@ function App() {
         </PageProvider>
     );
 }
-
-
 const main = document.getElementById("main");
 if (main) {
     const root = createRoot(main);
