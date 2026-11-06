@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pages, usePage } from "./PageContext";
 import Animatronic from "./Animatronics/Animatronic";
 import { useGlobal } from "./GlobalContext";
 import audioHandler from "./SFX";
 import camFeed from "./Camera";
-import DoorSwitches from "./DoorSwitches";
+import DoorSwitch from "./DoorSwitch";
 
 
 
@@ -16,9 +16,61 @@ export default function Game() {
     const [hr, setHr] = useState(12); //hr counter
     const [battery, setBattery] = useState(100); //Sets Battery Energy To 100%
     const SECONDS = 2; //how many seconds equal 1 hr
-    const [isSwitchOn, setSwitch] = useState([false, false, false, false]); //switch on or off states
     let isUsingCam = false;
     let animatronics: Animatronic[];
+    let leftSwitch: DoorSwitch;
+    let rightSwitch: DoorSwitch;
+
+
+    useEffect(() => {
+        if (display != Pages.Game) {
+            return;
+        }
+        leftSwitch = new DoorSwitch(document.getElementById("leftSwitch") as HTMLImageElement);
+        rightSwitch = new DoorSwitch(document.getElementById("rightSwitch") as HTMLImageElement);
+    
+        const viewport = document.getElementById("viewport");
+        const scene = document.getElementById("scene");
+    
+        let targetX = 0;
+        let currentX = 0;
+        let maxPan = 0;
+        let init = false;
+    
+        function mouseMovment(event: MouseEvent) {
+            const rect = viewport!.getBoundingClientRect();
+            const mouseX = Math.max(0, Math.min(1,
+                (event.clientX - rect.left) / rect.width
+            ));
+            targetX = -mouseX * maxPan;
+        }
+    
+        function animate() {
+            currentX += (targetX - currentX) * 0.12;
+            scene!.style.transform = `translateX(${currentX}px)`;
+            requestAnimationFrame(animate);
+        }
+    
+        function updateBounds() {
+            let prevPan = maxPan;
+            maxPan = Math.max(0, scene!.offsetWidth - viewport!.clientWidth);
+            if (!init) {
+                targetX = -maxPan / 2;
+                currentX = targetX;
+                init = true;
+            } else if (prevPan != maxPan) {
+                if(prevPan > 0){
+                    targetX = targetX / prevPan * maxPan;
+                    currentX = currentX / prevPan * maxPan;
+                }
+            }
+            scene!.style.transform = `translateX(${currentX}px)`;
+        }
+        updateBounds();
+        viewport!.addEventListener("mousemove", mouseMovment);
+        document.getElementById("topLayer")!.addEventListener("load", updateBounds);
+        animate();
+    }, [display]);
 
 
     return (
@@ -32,7 +84,22 @@ export default function Game() {
                 alt="Game Screen"
                 draggable={false}
                 />
-                <DoorSwitches />
+                <img
+                src="/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png"
+                id="leftSwitch"
+                className="left-switch user-select-none"
+                onPointerDown={(event) => {leftSwitch.checkClickPostion(event.clientX, event.clientY, false)}}
+                onPointerUp={(event) => {leftSwitch.checkClickPostion(event.clientX, event.clientY, true)}}
+                draggable={false}
+                />
+                <img
+                src="/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png"
+                id="rightSwitch"
+                className="right-switch user-select-none"
+                onPointerDown={(event) => {rightSwitch.checkClickPostion(event.clientX, event.clientY, false)}}
+                onPointerUp={(event) => {rightSwitch.checkClickPostion(event.clientX, event.clientY, true)}}
+                draggable={false}
+                />
                 <img
                 src="/ASSETS/TEXTURES/OFFICE/doors/door_left_normal.png"
                 id="leftDoor"
