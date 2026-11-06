@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
+import SFX from './src/SFX';
+import Info from './info';
+import BackgroundMusic from './BackgroundMusic';
 import audioHandler from './src/SFX';
 import Animatronic from './src/Animatronic';
 import Bonnie from './src/Bonnie';
@@ -374,7 +377,12 @@ function GameMenu() {
         audioHandler.playSFX(audioHandler.SFX.click);
         setDisplay("options");
     }
+    function info() {
+        audioHandler.playSFX(audioHandler.SFX.click);
+        setDisplay("info");
+    }
 
+    
 
     /*////////////////////////////END OF MAIN MENU FUNCTIONS////////////////////////////////*/
 
@@ -384,6 +392,7 @@ function GameMenu() {
         case "main":
     return (
         <>
+        <BackgroundMusic/>                                                                                                  {/* BACKGROUND MUSIC */}
         <video className="background-video" autoPlay loop playsInline muted>
             <source src="ASSETS/VIDEOS/main_menu_background.mp4" type="video/mp4" />                                       {/* BACKGROUND VIDEO */}  
         </video>
@@ -399,6 +408,9 @@ function GameMenu() {
             {/* </div> */}
             <div className="align-menu-button">
                 <button className="h2 mx-5 my-5 text-white flat-button" onClick={optionsMenu}>OPTIONS</button>             {/*OPTIONS BUTTON*/}
+            </div>
+            <div className="align-menu-button">
+                <button className="h2 mx-5 my-5 text-white flat-button" onClick={info}>INFO</button>                        {/*INFO BUTTON*/}
             </div>
             </div>
             
@@ -442,6 +454,11 @@ function GameMenu() {
             </div>
         </div>
         </>
+    );
+    break;
+    case "info" :
+        return (
+            <Info onExit={() => setDisplay("main")}/>
     );
     break;
     case "camera":
