@@ -1,3 +1,5 @@
+import audioHandler from "./SFX";
+
 export default class Door {
     private door: HTMLImageElement;
     private isOpen: boolean = true;
@@ -15,6 +17,7 @@ export default class Door {
     }
 
     public toggleDoor(): void {
+        audioHandler.playSFX(audioHandler.SFX.door_close);
         if (this.isAnimating) {
             return;
         }

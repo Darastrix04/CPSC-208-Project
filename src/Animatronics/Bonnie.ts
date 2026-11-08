@@ -5,6 +5,7 @@ import MoveNode from "./MoveNode";
 class Bonnie extends Animatronic{
     private oldSrc: string | undefined;
     readonly moveInt: number = 5;
+    protected pos: MoveNode;
 
     constructor(difficulty: string, night: number) {
         super(difficulty, night);
@@ -43,15 +44,12 @@ class Bonnie extends Animatronic{
         room2A.addNode(room5, room1B, room3, room2B);
         room3.addNode(room2A, room2B);
         room2B.addNode(room3, room2A);
+        this.aiLvl += 3; //remove this after the presentation
         this.pos = room1A;
     }
 
 
-    override move(): void {
-        if(this.pos == null) {
-            console.log("attempted to move a null Animatronic");
-            return;
-        }
+    override move(): void { 
         if(this.oldSrc != null) {
             camFeed.updateCamFeed(this.pos.getName(), this.oldSrc);
         }
@@ -60,9 +58,6 @@ class Bonnie extends Animatronic{
         }
         const next = this.pos.nextNode();
         this.pos = next;
-        if (this.pos.getName() == "1A") {
-            camFeed.updateCamFeed("1A", "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_everyone.png");
-        }
         this.oldSrc = camFeed.getCamFeed(this.pos.getName());
         camFeed.updateCamFeed(this.pos.getName(), this.pos.getSrc());
         console.log(`Bonnie moved to ${this.pos.getName()}`);
@@ -83,6 +78,10 @@ class Bonnie extends Animatronic{
     }
     override toString(): string {
         return "bonnie";
+    }
+
+    public getPos(): string {
+        return this.pos.getName();
     }
 
 }

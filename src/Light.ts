@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useGame } from "./GameContext";
+import audioHandler from "./SFX";
 
 export default class Light {
     private isOn: boolean = false;
@@ -21,6 +22,7 @@ export default class Light {
     }
 
     private lightOn(): void {
+        audioHandler.playSFX(audioHandler.SFX.light);
         switch (this.side) {
             case "left":
                 if (this.isAtDoor) {
@@ -41,6 +43,7 @@ export default class Light {
             }
 
     private lightOff(): void {
+        audioHandler.stopSFX(audioHandler.SFX.light);
         document.getElementById("topLayer")!.setAttribute("src", `/ASSETS/TEXTURES/OFFICE/office_top_layer.png`);
         this.isOn = false;
     }

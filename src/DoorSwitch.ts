@@ -39,6 +39,8 @@ export default class DoorSwitch {
                 if(!this.door.getIsAnimating()) {
                     this.toggleDoor();
                     this.toggleSwitch();
+                } else {
+                    audioHandler.playSFX(audioHandler.SFX.door_error);
                 }
             }
         } else {

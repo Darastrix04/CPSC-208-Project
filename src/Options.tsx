@@ -14,6 +14,9 @@ export default function Options() {
         Object.values(audioHandler.SFX).forEach(sfx => {
             sfx.volume = volume / 100;
         });
+        Object.values(audioHandler.BACKGROUND_SFX).forEach(sfx => {
+            sfx.volume = volume / 100;
+        });
     }, [volume])
 
 

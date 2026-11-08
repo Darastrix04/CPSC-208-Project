@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pages, usePage } from "./PageContext";
 import Animatronic from "./Animatronics/Animatronic";
 import { useGlobal } from "./GlobalContext";
@@ -11,16 +11,28 @@ import Bonnie from "./Animatronics/Bonnie";
 
 let leftSwitch: DoorSwitch;
 let rightSwitch: DoorSwitch;
+    
 export default function Game() {
     const {setDisplay, display} = usePage();
     const {night, setNight, difficulty, volume} = useGlobal();
     const {setHr, hr,SECONDS,time, setTime,battery,setBattery,isUsingCam,setIsUsingCam, isAtLeftDoor, isAtRightDoor, setAtLeftDoor, setAtRightDoor} = useGame();
-    let animatronics: Animatronic[] = [];
-    animatronics[0] = new Bonnie(difficulty, night);
+
+    const animatronics = useMemo<Animatronic[]>(() => {
+        return [new Bonnie(difficulty, night)];
+    }, [night]);
     
     
+    //Things that start up once and never again
+    useEffect(() => {
+        audioHandler.playBackGround();
+        return () => {
+            audioHandler.stopBackGround();
+        }
+    }, []);
+
     
     
+    //game timer
     useEffect(() => {
         const interval = setInterval(() => {
             setTime(time + 1);
@@ -41,25 +53,36 @@ export default function Game() {
                         setAtLeftDoor(true);
                     } else if(anim.getPos() === "4B") {
                         setAtRightDoor(true);
-                    } else if(anim instanceof Bonnie){
+                    } else if(anim instanceof Bonnie) {
                         setAtLeftDoor(false);
                     } else {
                         setAtRightDoor(false);
                     }
+
+
+                // if(anim.getPos() == "2B") {
+                //     isAtDoor = true;
+                // } else {
+                //     isAtDoor = false;
+                //     timeAtDoor = 0;
+                // }
             }
         });
 
-        if (time % SECONDS == 0 && time != 0) {
-            setHr((hr + 1) % 12);
-            if (hr == 6) {
+        if (time % SECONDS === 0 && time !== 0) {
+            const nextHr = (hr % 12) + 1;
+            setHr(nextHr);
+            if (nextHr === 6) {
                 animatronics.forEach(anim => {
                     anim.deactivate();
                 });
-                //trigger end night cutscene here
-                setNight(hr + 1);
+                audioHandler.stopBackGround();
+                if(night > 1) {
+                    //trigger ending night cutscene
+                }
+                setNight(night + 1);
             }
         }
-        
     }, [time]);
 
 
@@ -67,9 +90,6 @@ export default function Game() {
     useEffect(() => {
         setTime(0);
         setHr(12);
-        if(night > 1) {
-            //trigger ending night cutscene
-        }
     }, [night]);
 
 
@@ -221,7 +241,6 @@ export default function Game() {
         onClick={() => {
             if (!isUsingCam) {
                 camFeed.show();
-                audioHandler.playSFX(audioHandler.SFX.cam_switch);
                 setIsUsingCam(true);
             } else {
                 camFeed.close();
