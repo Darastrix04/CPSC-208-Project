@@ -8,7 +8,7 @@ interface GameProvideProps {
 }
 
 const GameProvider = ({children}: GameProvideProps) => {
-    const SECONDS = 2; //how many seconds equal 1 hr
+    const SECONDS = 90; //how many seconds equal 1 hr
     const [isUsingCam, setIsUsingCam] = useState(false);
     const [time, setTime] = useState(0);
     const [hr, setHr] = useState(12);

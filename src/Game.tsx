@@ -7,6 +7,7 @@ import camFeed from "./Camera";
 import DoorSwitch from "./DoorSwitch";
 import { useGame } from "./GameContext";
 import Bonnie from "./Animatronics/Bonnie";
+import Chicka from "./Animatronics/Chicka";
 
 
 let leftSwitch: DoorSwitch;
@@ -18,7 +19,7 @@ export default function Game() {
     const {setHr, hr,SECONDS,time, setTime,battery,setBattery,isUsingCam,setIsUsingCam, isAtLeftDoor, isAtRightDoor, setAtLeftDoor, setAtRightDoor} = useGame();
 
     const animatronics = useMemo<Animatronic[]>(() => {
-        return [new Bonnie(difficulty, night)];
+        return [new Bonnie(difficulty, night), new Chicka(difficulty, night)];
     }, [night]);
     
     
@@ -42,8 +43,6 @@ export default function Game() {
 
    /*          Adds hour after 90 seconds              */
     useEffect(() => {
-
-
         //Animatronic Movement
         animatronics.forEach(anim => {
             if (time % anim.moveInt! == 0 && time != 0) {
@@ -55,17 +54,10 @@ export default function Game() {
                         setAtRightDoor(true);
                     } else if(anim instanceof Bonnie) {
                         setAtLeftDoor(false);
-                    } else {
+                    } else if(anim instanceof Chicka){
                         setAtRightDoor(false);
                     }
 
-
-                // if(anim.getPos() == "2B") {
-                //     isAtDoor = true;
-                // } else {
-                //     isAtDoor = false;
-                //     timeAtDoor = 0;
-                // }
             }
         });
 

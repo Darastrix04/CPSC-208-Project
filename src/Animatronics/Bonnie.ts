@@ -3,7 +3,6 @@ import camFeed from "../Camera";
 import MoveNode from "./MoveNode";
 
 class Bonnie extends Animatronic{
-    private oldSrc: string | undefined;
     readonly moveInt: number = 5;
     protected pos: MoveNode;
 
@@ -48,20 +47,31 @@ class Bonnie extends Animatronic{
         this.pos = room1A;
     }
 
-
-    override move(): void { 
-        if(this.oldSrc != null) {
-            camFeed.updateCamFeed(this.pos.getName(), this.oldSrc);
-        }
-        if (this.pos.getName() == "1A") {
-            camFeed.updateCamFeed("1A", "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_freddy_chica.png");
-        }
+    override move(): void {
         const next = this.pos.nextNode();
+        const currentRoom = this.pos.getName();
+        if (next.getName() !== "1B" || !camFeed.isOccupied("1B")) {
+            if (currentRoom === "1A") {
+                switch (camFeed.getCamFeed("1A")) {
+                    case "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_everyone.png":
+                        camFeed.updateCamFeed("1A", "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_freddy_chica.png");
+                    break;
+                    case "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_freddy_bonnie.png":
+                        camFeed.updateCamFeed("1A", "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_freddy.png");
+                    break;
+            }
+        }else {
+            // Clear the previous room
+            camFeed.updateCam(currentRoom);
+        }
+
         this.pos = next;
-        this.oldSrc = camFeed.getCamFeed(this.pos.getName());
-        camFeed.updateCamFeed(this.pos.getName(), this.pos.getSrc());
-        console.log(`Bonnie moved to ${this.pos.getName()}`);
+        camFeed.updateCamFeed(next.getName(), next.getSrc());
+        console.log(`Bonnie moved to ${next.getName()}`);
+    } else {
+        console.log(`Bonnie couldn't move because ${next.getName()} is occupied`);
     }
+}
 
     override aiReaval(hr: number): void {
         switch(hr) {
