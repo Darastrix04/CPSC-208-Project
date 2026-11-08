@@ -190,7 +190,7 @@ export default function Game() {
     <>
     <div id="cutSceneText" className="cut-scene-text">
         <div id="cutSceneHr">
-            5AM
+            5 AM
         </div>
         <div id="cutSceneNightText">
             night {night}
