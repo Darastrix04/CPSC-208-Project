@@ -61,7 +61,6 @@ class Bonnie extends Animatronic{
                     break;
             }
         }else {
-            // Clear the previous room
             camFeed.updateCam(currentRoom);
         }
 
