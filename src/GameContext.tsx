@@ -1,5 +1,4 @@
 import React, { createContext, useContext } from "react";
-import type Animatronic from "./Animatronics/Animatronic";
 
 
 
