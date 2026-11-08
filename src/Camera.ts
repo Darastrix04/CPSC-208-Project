@@ -1,10 +1,11 @@
 import audioHandler from "./SFX";
 class Camera {
     private lastCam: string = "1A";
-    public cameras = new Map<string, string>();
+    private cameras = new Map<string, string>();
+    private canRun: boolean = false;
     private emptyCameras = new Map<string, string>();
+    private readonly kitchenAudio = new Audio("ASSETS/SFX/cameras/kitchen/sfx_fumbling_kitchen_short.mp3");
 
-    
     constructor() {
         this.cameras.set("1A", "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_everyone.png");
         this.cameras.set("1B", "ASSETS/TEXTURES/CAMERA/dining_area/dining_area_empty.png");
@@ -66,21 +67,14 @@ class Camera {
         }, 30);
     }
 
-    public isOccupied(cam: string): boolean {
-        if(this.cameras.get(cam) !== this.emptyCameras.get(cam)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 
     public getCamFeed(cam: string): string | undefined {
         return this.cameras.get(cam);
     }
 
-    public updateCam(cam: string) {
-        this.cameras.set(cam, this.emptyCameras.get(cam)!);
+    public isOccupied(cam: string): boolean {
+        if (cam !== "1B") return false;
+        return this.cameras.get(cam) !== this.emptyCameras.get(cam);
     }
 
     public setCameraFeed(cam: string) {
@@ -89,11 +83,43 @@ class Camera {
         }
             this.lastCam = cam;
             let cameraMonitor = document.getElementById("cameraScene") as HTMLImageElement;
-            cameraMonitor.src = this.cameras.get(cam) ?? "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_everyone.png";
+            if (cam === "6" && camFeed.getCamFeed("6") !== "ASSETS/TEXTURES/OFFICE/office_bottom_layer.png") {
+                cameraMonitor.src = "ASSETS/TEXTURES/OFFICE/office_bottom_layer.png";
+                if (this.kitchenAudio.paused) {
+                    this.kitchenAudio.currentTime = 0;
+                    this.kitchenAudio.play();
+                }
+            } else if(cam === "2A" && this.canRun){
+                let frame = 1;
+                const animation = setInterval(() => {
+                    cameraMonitor.src = `ASSETS/TEXTURES/CAMERA/west_hall/foxy_running/foxy_running_${frame}.png`;
+                    frame++;
+                    if (frame > 29) {
+                        clearInterval(animation);
+                        cameraMonitor.src = this.getCamFeed(this.lastCam) ?? "";
+                        this.setFoxyRun(false);
+                    }
+                }, 20);
+            } else {
+                this.kitchenAudio.pause();
+                this.kitchenAudio.currentTime = 0;
+                cameraMonitor.src = this.cameras.get(cam) ?? "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_everyone.png";
+            }
     }
-
     public updateCamFeed(cam: string, src: string) {
         this.cameras.set(cam, src);
+        if(cam === this.lastCam && cam !== "1A") {
+            this.setCameraFeed(cam)
+        }
+    }
+
+    public setFoxyRun(canRun: boolean) {
+        this.canRun = canRun;
+    }
+
+
+    public updateCamEmpty(cam: string) {
+        this.cameras.set(cam, this.emptyCameras.get(cam)!);
     }
     public getLastCam(): string {
         return this.lastCam;

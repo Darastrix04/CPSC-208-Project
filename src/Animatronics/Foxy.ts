@@ -46,6 +46,7 @@ class Foxy extends Animatronic{
             break;
         }
         if(this.position == 4) {
+            camFeed.setFoxyRun(true);
             //send in attack here
             //set timer for 25 seconds
             camFeed.updateCamFeed("1C", "ASSETS/TEXTURES/CAMERA/pirate_cove/pirate_cove_1.png");

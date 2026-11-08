@@ -61,7 +61,7 @@ class Bonnie extends Animatronic{
                     break;
             }
         }else {
-            camFeed.updateCam(currentRoom);
+            camFeed.updateCamEmpty(currentRoom);
         }
 
         this.pos = next;
@@ -70,6 +70,9 @@ class Bonnie extends Animatronic{
     } else {
         console.log(`Bonnie couldn't move because ${next.getName()} is occupied`);
     }
+
+    console.log("NEW BONNIE MOVE METHOD LOADED");
+
 }
 
     override aiReaval(hr: number): void {
