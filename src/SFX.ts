@@ -4,10 +4,6 @@ class SFX {
         click: new Audio('./ASSETS/SFX/MENU/sfx_menu_confirm.mp3'),
         door_close: new Audio('./ASSETS/SFX/office/door/SFXBible_12478.wav'),
         cam_down: new Audio('ASSETS/SFX/cameras/put down.wav'),
-<<<<<<< HEAD
-        cam_switch: new Audio('ASSETS/SFX/cameras/blip3.wav')
-    };
-=======
         cam_switch: new Audio('ASSETS/SFX/cameras/blip3.wav'),
         door_error: new Audio('ASSETS/SFX/office/door/error.wav')
     };
@@ -17,7 +13,6 @@ class SFX {
         new Audio(`ASSETS/SFX/ambience/EerieAmbienceLargeSca_MV005.wav`)
     ];
     private currentBackGround: HTMLAudioElement | null = null;
->>>>>>> kolby-developement
     constructor() {
         this.SFX.light.loop = true;
     }
@@ -27,17 +22,11 @@ class SFX {
         sound.volume = audio.volume;
         sound.currentTime = 0;
         sound.play();
-<<<<<<< HEAD
-;
-=======
->>>>>>> kolby-developement
     }
     public stopSFX(audio: HTMLAudioElement) {
         if(!(audio instanceof Audio)) {return;}
         audio.pause();
     }
-<<<<<<< HEAD
-=======
     public playBackGround(): void {
         const rand = Math.floor(Math.random() * this.BACKGROUND_SFX.length);
         const curr = this.BACKGROUND_SFX[rand];
@@ -55,7 +44,6 @@ class SFX {
         }
     }
 
->>>>>>> kolby-developement
 }
 
 const audioHandler = new SFX();
