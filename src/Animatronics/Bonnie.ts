@@ -6,7 +6,7 @@ class Bonnie extends Animatronic{
     private oldSrc: string | undefined;
     readonly moveInt: number = 5;
 
-    constructor(difficulty: number, night: number) {
+    constructor(difficulty: string, night: number) {
         super(difficulty, night);
         switch(night) {
             case 1:

@@ -5,27 +5,31 @@ import type MoveNode from "./MoveNode";
 class Animatronic {
     // Properties
     private active: boolean;
-    private difficulty: number;
+    private difficulty: string;
     private night: number;
     aiLvl: number = 0;
     protected pos: MoveNode | undefined;
+    readonly moveInt: number | undefined;
 
 
-    constructor(difficulty: number, night: number) {
-        this.active = false;
+    constructor(difficulty: string, night: number) {
+        this.active = true;
         this.difficulty = difficulty;
         this.night = night;
         this.aiLvl;
     }
 
     public canMove(): boolean{
+        if(!this.activate) {
+
         let rand : number = Math.round(Math.random() * 20);
         if (rand <= this.aiLvl) {
             console.log("is able to move");
             return true;
         }
         console.log("Attmepted to move");
-        return false;
+    }
+    return false;
     }
 
     public getPos(): string {

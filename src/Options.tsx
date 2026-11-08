@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useGlobal } from "./GlobalContext";
 import { Pages, usePage } from "./PageContext";
 import audioHandler from "./SFX";
@@ -6,6 +7,15 @@ import audioHandler from "./SFX";
 export default function Options() {
     const {setDisplay} = usePage();
     const {night, setNight, difficulty, setDifficulty, setVolume, volume} = useGlobal();
+
+
+
+    useEffect(() => {
+        Object.values(audioHandler.SFX).forEach(sfx => {
+            sfx.volume = volume / 100;
+        });
+    }, [volume])
+
 
     return (
         <>

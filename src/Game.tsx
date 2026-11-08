@@ -5,29 +5,88 @@ import { useGlobal } from "./GlobalContext";
 import audioHandler from "./SFX";
 import camFeed from "./Camera";
 import DoorSwitch from "./DoorSwitch";
-import Door from "./Door";
 import { useGame } from "./GameContext";
+import Bonnie from "./Animatronics/Bonnie";
 
 
-
+let leftSwitch: DoorSwitch;
+let rightSwitch: DoorSwitch;
 export default function Game() {
-
     const {setDisplay, display} = usePage();
-    const {night, setNight, volume} = useGlobal();
-    const {setHr, hr,SECONDS,time, setTime,battery,setBattery} = useGame();
-    let {isUsingCam} = useGame();
-    let animatronics: Animatronic[];
-    let leftSwitch: DoorSwitch;
-    let rightSwitch: DoorSwitch;
+    const {night, setNight, difficulty, volume} = useGlobal();
+    const {setHr, hr,SECONDS,time, setTime,battery,setBattery,isUsingCam,setIsUsingCam, isAtLeftDoor, isAtRightDoor, setAtLeftDoor, setAtRightDoor} = useGame();
+    let animatronics: Animatronic[] = [];
+    animatronics[0] = new Bonnie(difficulty, night);
+    
+    
+    
+    
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTime(time + 1);
+        }, 1000);
+        return () => clearInterval(interval);
+    },);
+
+   /*          Adds hour after 90 seconds              */
+    useEffect(() => {
+
+
+        //Animatronic Movement
+        animatronics.forEach(anim => {
+            if (time % anim.moveInt! == 0 && time != 0) {
+                    anim.move();
+                    camFeed.setCameraFeed(camFeed.getLastCam());
+                    if(anim.getPos() === "2B") {
+                        setAtLeftDoor(true);
+                    } else if(anim.getPos() === "4B") {
+                        setAtRightDoor(true);
+                    } else if(anim instanceof Bonnie){
+                        setAtLeftDoor(false);
+                    } else {
+                        setAtRightDoor(false);
+                    }
+            }
+        });
+
+        if (time % SECONDS == 0 && time != 0) {
+            setHr((hr + 1) % 12);
+            if (hr == 6) {
+                animatronics.forEach(anim => {
+                    anim.deactivate();
+                });
+                //trigger end night cutscene here
+                setNight(hr + 1);
+            }
+        }
+        
+    }, [time]);
+
 
 
     useEffect(() => {
-        if (display != Pages.Game) {
-            return;
+        setTime(0);
+        setHr(12);
+        if(night > 1) {
+            //trigger ending night cutscene
         }
+    }, [night]);
+
+
+
+
+
+
+
+
+
+
+
+    useEffect(() => {
         //DOOR SWITCHES
-        leftSwitch = new DoorSwitch(document.getElementById("leftSwitch") as HTMLImageElement);
-        rightSwitch = new DoorSwitch(document.getElementById("rightSwitch") as HTMLImageElement);
+
+        leftSwitch = new DoorSwitch(document.getElementById("leftSwitch") as HTMLImageElement, isAtLeftDoor);
+        rightSwitch = new DoorSwitch(document.getElementById("rightSwitch") as HTMLImageElement, isAtRightDoor);
         //DOORS
     
         const viewport = document.getElementById("viewport");
@@ -160,13 +219,14 @@ export default function Game() {
         id="cameraMonitor"
         src="/ASSETS/TEXTURES/OFFICE/camera_button.png"
         onClick={() => {
-            if (isUsingCam!) {
+            if (!isUsingCam) {
                 camFeed.show();
-                isUsingCam = true;
+                audioHandler.playSFX(audioHandler.SFX.cam_switch);
+                setIsUsingCam(true);
             } else {
                 camFeed.close();
                 audioHandler.playSFX(audioHandler.SFX.cam_down);
-                isUsingCam = false;
+                setIsUsingCam(false);
             }
         }}
         draggable={false}
