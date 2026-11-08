@@ -89,16 +89,17 @@ class Camera {
                     this.kitchenAudio.currentTime = 0;
                     this.kitchenAudio.play();
                 }
-            } else if(cam === "1C" && this.canRun){
+            } else if(cam === "2A" && this.canRun){
                 let frame = 1;
                 const animation = setInterval(() => {
-                    cameraMonitor.src = `src/ASSETS/TEXTURES/CAMERA/west_hall/foxy_running/foxy_running_${frame}.png`;
+                    cameraMonitor.src = `ASSETS/TEXTURES/CAMERA/west_hall/foxy_running/foxy_running_${frame}.png`;
                     frame++;
                     if (frame > 29) {
                         clearInterval(animation);
                         cameraMonitor.src = this.getCamFeed(this.lastCam) ?? "";
+                        this.setFoxyRun(false);
                     }
-                }, 10);
+                }, 20);
             } else {
                 this.kitchenAudio.pause();
                 this.kitchenAudio.currentTime = 0;

@@ -5,7 +5,15 @@ class SFX {
         door_close: new Audio('./ASSETS/SFX/office/door/SFXBible_12478.wav'),
         cam_down: new Audio('ASSETS/SFX/cameras/put down.wav'),
         cam_switch: new Audio('ASSETS/SFX/cameras/blip3.wav'),
-        door_error: new Audio('ASSETS/SFX/office/door/error.wav')
+        door_error: new Audio('ASSETS/SFX/office/door/error.wav'),
+        main_menu: new Audio('ASSETS/SFX/MENU/darkness music.wav'),
+        night_1_call: new Audio('ASSETS/SFX/phone_calls/voiceover1c.wav'),
+        night_2_call: new Audio('ASSETS/SFX/phone_calls/voiceover2a.wav'),
+        night_3_call: new Audio('ASSETS/SFX/phone_calls/voiceover3.wav'),
+        night_4_call: new Audio('ASSETS/SFX/phone_calls/voiceover4.wav'),
+        night_5_call: new Audio('ASSETS/SFX/phone_calls/voiceover5.wav'),
+        victory_bell: new Audio('ASSETS/SFX/victory/chimes2.wav'),
+        victory_cheer: new Audio('ASSETS/SFX/victory/CROWD_SMALL_CHIL_EC049202.wav')
     };
     public readonly BACKGROUND_SFX: HTMLAudioElement[] = [
         new Audio(`ASSETS/SFX/ambience/ambience2.wav`),
@@ -15,6 +23,8 @@ class SFX {
     private currentBackGround: HTMLAudioElement | null = null;
     constructor() {
         this.SFX.light.loop = true;
+        this.SFX.main_menu.loop = true;
+
     }
     public playSFX(audio: HTMLAudioElement) {
         if(!(audio instanceof Audio)) {return;}

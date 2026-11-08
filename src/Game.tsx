@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { Pages, usePage } from "./PageContext";
+import { useEffect, useMemo } from "react";
+import {usePage } from "./PageContext";
 import Animatronic from "./Animatronics/Animatronic";
 import { useGlobal } from "./GlobalContext";
 import audioHandler from "./SFX";
@@ -15,6 +15,11 @@ let leftSwitch: DoorSwitch;
 let rightSwitch: DoorSwitch;
     
 export default function Game() {
+
+    const pause = (ms: number): Promise<void> => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    };
+    
     const {setDisplay, display} = usePage();
     const {night, setNight, difficulty, volume} = useGlobal();
     const {setHr, hr,SECONDS,time, setTime,battery,setBattery,isUsingCam,setIsUsingCam, isAtLeftDoor, isAtRightDoor, setAtLeftDoor, setAtRightDoor} = useGame();
@@ -26,6 +31,7 @@ export default function Game() {
     
     //Things that start up once and never again
     useEffect(() => {
+        audioHandler.stopSFX(audioHandler.SFX.main_menu);
         audioHandler.playBackGround();
         return () => {
             audioHandler.stopBackGround();
@@ -47,6 +53,7 @@ export default function Game() {
         //Animatronic Movement
         animatronics.forEach(anim => {
             if (time % anim.moveInt! == 0 && time != 0) {
+                if(anim.canMove()) {
                     anim.move();
                     camFeed.setCameraFeed(camFeed.getLastCam());
                     if(anim.getPos() === "2B") {
@@ -58,32 +65,65 @@ export default function Game() {
                     } else if(anim instanceof Chicka){
                         setAtRightDoor(false);
                     }
-
+                }
             }
         });
 
         if (time % SECONDS === 0 && time !== 0) {
             const nextHr = (hr % 12) + 1;
             setHr(nextHr);
-            if (nextHr === 6) {
-                animatronics.forEach(anim => {
-                    anim.deactivate();
-                });
-                audioHandler.stopBackGround();
-                if(night > 1) {
-                    //trigger ending night cutscene
+                if (nextHr === 6) {
+                    victoryCutscene();
                 }
-                setNight(night + 1);
             }
-        }
-    }, [time]);
+        }, [time]);
 
 
 
     useEffect(() => {
+        switch(night) {
+            case 1: 
+            audioHandler.playSFX(audioHandler.SFX.night_1_call);
+            break;
+            case 2:
+            audioHandler.playSFX(audioHandler.SFX.night_2_call);
+            break;
+            case 3:
+            audioHandler.playSFX(audioHandler.SFX.night_3_call);
+            break;
+            case 4:
+            audioHandler.playSFX(audioHandler.SFX.night_4_call);
+            break;
+            case 5:
+            audioHandler.playSFX(audioHandler.SFX.night_5_call);
+            break;
+        }
         setTime(0);
         setHr(12);
     }, [night]);
+
+    const victoryCutscene = async (): Promise<void> => {
+        animatronics.forEach(anim => {
+            anim.deactivate();
+        });
+        audioHandler.stopBackGround();
+        document.getElementById("gameView")?.setAttribute("style", "display: none;");
+        document.getElementById("cutSceneText")?.setAttribute("style", "display: block;");
+        document.getElementById("backgroundCutScene")?.setAttribute("style", "display: block;");
+        audioHandler.playSFX(audioHandler.SFX.victory_bell);
+        await pause(6000);
+        document.getElementById("cutSceneHr")!.textContent = "6 AM"
+        await pause(5000);
+        document.getElementById("cutSceneText")?.setAttribute("style", "display: none;");
+        audioHandler.playSFX(audioHandler.SFX.victory_cheer);
+        document.getElementById("cutSceneNightText")!.textContent = `night ${night + 1}`;
+        await pause(4000);
+        document.getElementById("gameView")?.setAttribute("style", "display: block;");
+        document.getElementById("cutSceneText")?.setAttribute("style", "display: none;");
+        document.getElementById("backgroundCutScene")?.setAttribute("style", "display: none;");
+        audioHandler.stopSFX(audioHandler.SFX.night_1_call);
+        setNight(night + 1);
+    };
 
 
 
@@ -148,6 +188,16 @@ export default function Game() {
 
     return (
     <>
+    <div id="cutSceneText" className="cut-scene-text">
+        <div id="cutSceneHr">
+            5AM
+        </div>
+        <div id="cutSceneNightText">
+            night {night}
+        </div>
+    </div>
+    <img id="backgroundCutScene" src="ASSETS/TEXTURES/OFFICE/office_bottom_layer.png"/>
+    <div id="gameView">
         <div id="viewport">
             <div id="scene">
                 <img
@@ -243,6 +293,7 @@ export default function Game() {
         }}
         draggable={false}
     />
+    </div>
     </div>
     </>
     );
