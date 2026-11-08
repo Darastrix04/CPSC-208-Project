@@ -1,9 +1,16 @@
 import audioHandler from "./SFX";
 class Camera {
     private lastCam: string = "1A";
+<<<<<<< HEAD
     public cameras = new Map<string, string>();
 
     
+=======
+    private cameras = new Map<string, string>();
+    private emptyCameras = new Map<string, string>();
+    private readonly kitchenAudio = new Audio("ASSETS/SFX/cameras/kitchen/sfx_fumbling_kitchen_short.mp3");
+
+>>>>>>> kolby-developement
     constructor() {
         this.cameras.set("1A", "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_everyone.png");
         this.cameras.set("1B", "ASSETS/TEXTURES/CAMERA/dining_area/dining_area_empty.png");
@@ -16,6 +23,10 @@ class Camera {
         this.cameras.set("5", "ASSETS/TEXTURES/CAMERA/backstage/backstage_empty.png");
         this.cameras.set("6", "ASSETS/TEXTURES/OFFICE/office_bottom_layer.png");
         this.cameras.set("7", "ASSETS/TEXTURES/CAMERA/restrooms/restrooms_empty.png");
+<<<<<<< HEAD
+=======
+        this.emptyCameras = new Map(this.cameras);
+>>>>>>> kolby-developement
     }
     public show(): void {
         const cameraSection = document.getElementById("cameraSection");
@@ -69,17 +80,48 @@ class Camera {
         return this.cameras.get(cam);
     }
 
+<<<<<<< HEAD
+=======
+    public isOccupied(cam: string): boolean {
+        if (cam !== "1B") return false;
+        return this.cameras.get(cam) !== this.emptyCameras.get(cam);
+    }
+
+>>>>>>> kolby-developement
     public setCameraFeed(cam: string) {
         if (cam != this.lastCam) {
             audioHandler.playSFX(audioHandler.SFX.cam_switch);
         }
             this.lastCam = cam;
             let cameraMonitor = document.getElementById("cameraScene") as HTMLImageElement;
+<<<<<<< HEAD
             cameraMonitor.src = this.cameras.get(cam) ?? "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_everyone.png";
     }
 
     public updateCamFeed(cam: string, src: string) {
         this.cameras.set(cam, src);
+=======
+            if (cam === "6" && camFeed.getCamFeed("6") !== "ASSETS/TEXTURES/OFFICE/office_bottom_layer.png") {
+                cameraMonitor.src = "ASSETS/TEXTURES/OFFICE/office_bottom_layer.png";
+                if (this.kitchenAudio.paused) {
+                    this.kitchenAudio.currentTime = 0;
+                    this.kitchenAudio.play();
+                }
+            } else {
+                this.kitchenAudio.pause();
+                this.kitchenAudio.currentTime = 0;
+                cameraMonitor.src = this.cameras.get(cam) ?? "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_everyone.png";
+            }
+    }
+    public updateCamFeed(cam: string, src: string) {
+        this.cameras.set(cam, src);
+        if(cam === this.lastCam && cam !== "1A") {
+            this.setCameraFeed(cam)
+        }
+    }
+    public updateCam(cam: string) {
+        this.cameras.set(cam, this.emptyCameras.get(cam)!);
+>>>>>>> kolby-developement
     }
     public getLastCam(): string {
         return this.lastCam;

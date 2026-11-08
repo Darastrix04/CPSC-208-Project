@@ -1,0 +1,8 @@
+import { Fragment as _Fragment, jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Pages, usePage } from "./PageContext";
+function MainMenu() {
+    const { setDisplay } = usePage();
+    return (_jsxs(_Fragment, { children: [_jsxs("video", { className: "background-video", autoPlay: true, loop: true, playsInline: true, muted: true, children: [_jsx("source", { src: "ASSETS/VIDEOS/main_menu_background.mp4", type: "video/mp4" }), "                                       "] }), _jsxs("div", { className: "main-menu", children: [_jsx("div", { id: "title", className: "h1 title ms-4 text-white", children: "Five Nights at Freddy's                                                                                    " }), _jsxs("div", { className: "align-menu-button", children: [_jsx("button", { className: "h2 mx-5 my-5 text-white flat-button", onClick: () => { setDisplay(Pages.Game); }, children: "NEW GAME" }), "               "] }), _jsxs("div", { className: "align-menu-button", children: [_jsx("button", { className: "h2 mx-5 my-5 text-white flat-button", onClick: () => { setDisplay(Pages.Game); }, children: "CONTINUE" }), "           "] }), _jsxs("div", { className: "align-menu-button", children: [_jsx("button", { className: "h2 mx-5 my-5 text-white flat-button", onClick: () => { setDisplay(Pages.Options); }, children: "OPTIONS" }), "             "] })] })] }));
+}
+export default MainMenu;
+//# sourceMappingURL=MainMenu.js.map

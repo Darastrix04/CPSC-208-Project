@@ -1,0 +1,20 @@
+import { useState } from "react";
+import { PageContext, Pages, type PageContextType } from "./PageContext";
+
+
+interface PageProviderProps {
+    children: React.ReactNode;
+}
+
+function PageProvider({children}: PageProviderProps) {
+    const [display, setDisplay] = useState<Pages>(Pages.MainMenu);
+    const value: PageContextType = {display, setDisplay};
+
+    return (
+        <PageContext.Provider value={{display, setDisplay}}>
+            {children}
+        </PageContext.Provider>
+    );
+}
+
+export default PageProvider;
