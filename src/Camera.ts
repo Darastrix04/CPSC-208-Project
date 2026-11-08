@@ -2,6 +2,7 @@ import audioHandler from "./SFX";
 class Camera {
     private lastCam: string = "1A";
     private cameras = new Map<string, string>();
+    private canRun: boolean = false;
     private emptyCameras = new Map<string, string>();
     private readonly kitchenAudio = new Audio("ASSETS/SFX/cameras/kitchen/sfx_fumbling_kitchen_short.mp3");
 
@@ -88,6 +89,16 @@ class Camera {
                     this.kitchenAudio.currentTime = 0;
                     this.kitchenAudio.play();
                 }
+            } else if(cam === "1C" && this.canRun){
+                let frame = 1;
+                const animation = setInterval(() => {
+                    cameraMonitor.src = `src/ASSETS/TEXTURES/CAMERA/west_hall/foxy_running/foxy_running_${frame}.png`;
+                    frame++;
+                    if (frame > 29) {
+                        clearInterval(animation);
+                        cameraMonitor.src = this.getCamFeed(this.lastCam) ?? "";
+                    }
+                }, 10);
             } else {
                 this.kitchenAudio.pause();
                 this.kitchenAudio.currentTime = 0;
@@ -100,7 +111,13 @@ class Camera {
             this.setCameraFeed(cam)
         }
     }
-    public updateCam(cam: string) {
+
+    public setFoxyRun(canRun: boolean) {
+        this.canRun = canRun;
+    }
+
+
+    public updateCamEmpty(cam: string) {
         this.cameras.set(cam, this.emptyCameras.get(cam)!);
     }
     public getLastCam(): string {

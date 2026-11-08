@@ -53,6 +53,21 @@ class Foxy extends Animatronic{
         }
     }
 
+    private run() {
+        let frame = 1;
+        const animation = setInterval(() => {
+            cameraMonitor.src = `/ASSETS/TEXTURES/CAMERA/cam_flippa_annimation/camera_flip_${frame}.png`;
+            frame++;
+            if (frame > 29) {
+                clearInterval(animation);
+                cameraMonitor.src = this.getCamFeed(this.lastCam) ?? "";
+                if (cameraMap) {
+                    cameraMap.style.visibility = "visible";
+                } 
+            }
+        }, 30);
+    }
+
     override aiReaval(hr: number): void {
         switch(hr) {
             case 3:

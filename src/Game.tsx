@@ -8,6 +8,7 @@ import DoorSwitch from "./DoorSwitch";
 import { useGame } from "./GameContext";
 import Bonnie from "./Animatronics/Bonnie";
 import Chicka from "./Animatronics/Chicka";
+import Foxy from "./Animatronics/Foxy";
 
 
 let leftSwitch: DoorSwitch;
@@ -19,7 +20,7 @@ export default function Game() {
     const {setHr, hr,SECONDS,time, setTime,battery,setBattery,isUsingCam,setIsUsingCam, isAtLeftDoor, isAtRightDoor, setAtLeftDoor, setAtRightDoor} = useGame();
 
     const animatronics = useMemo<Animatronic[]>(() => {
-        return [new Bonnie(difficulty, night), new Chicka(difficulty, night)];
+        return [new Bonnie(difficulty, night), new Chicka(difficulty, night), new Foxy(difficulty, night)];
     }, [night]);
     
     
