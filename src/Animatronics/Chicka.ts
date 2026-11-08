@@ -61,7 +61,6 @@ class Chicka extends Animatronic{
                     break;
             }
         } else {
-            // Clear the previous room
             camFeed.updateCam(currentRoom);
         }
         this.pos = next;
