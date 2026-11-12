@@ -409,6 +409,7 @@ export default function Game() {
     return (
     <>
     <CameraView />
+    <GameHUD />
     <div id="cutSceneText" className="cut-scene-text">
         <div id="cutSceneHr">
             5 AM
