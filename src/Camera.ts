@@ -88,6 +88,59 @@ class Camera {
     public setCameraFeed(cam: string) {
         if (cam != this.lastCam) {
             audioHandler.playSFX(audioHandler.SFX.cam_switch);
+
+            switch (cam) {
+                case "4B":
+                    switch (Math.floor(Math.random() * 10)) {
+                        case 0:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/e_hall_corner/e_hall_corner_lore_1.png");
+                            break;
+                        case 1:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/e_hall_corner/e_hall_corner_lore_2.png");
+                            break;
+                        case 2:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/e_hall_corner/e_hall_corner_lore_3.png");
+                            break;
+                        case 3:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/e_hall_corner/e_hall_corner_lore_4.png");
+                            break;
+                        default:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/e_hall_corner/e_hall_corner_empty.png");
+                    }
+                    break;
+                case "4A":
+                    switch (Math.floor(Math.random() * 10)) {
+                        case 0: 
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/east_hall/east_hall_spooky_1.png");
+                            break;
+                        case 1:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/east_hall/east_hall_spooky_2.png");
+                            break;
+                        default:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/east_hall/east_hall_empty.png");
+                    }
+                    break;
+                case "2B":
+                    switch (Math.floor(Math.random() * 10)) {
+                        case 0:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/w_hall_corner/w_hall_corner_spooky.png");
+                            break;
+                        default:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/w_hall_corner/w_hall_corner_empty.png");
+                    }
+                    break;
+                case "5":
+                    switch (Math.floor(Math.random() * 10)) {
+                        case 0:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/backstage/backstage_spooky.png");
+                            break;
+                        default:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/backstage/backstage_empty.png");
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
             this.lastCam = cam;
             const cameraMonitor = document.getElementById("cameraScene") as HTMLImageElement;
