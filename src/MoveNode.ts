@@ -15,7 +15,7 @@ class MoveNode {
 
     public nextNode(): MoveNode {
         const rand = Math.floor(Math.random() * this.nodes.length);
-        return this.nodes[rand];
+        return this.nodes[rand]!;
     }
 
     public getName(): string {

@@ -1,15 +1,18 @@
 
 import camFeed from "../Camera";
-import type MoveNode from "./MoveNode";
+import MoveNode from "./MoveNode";
 
 class Animatronic {
     // Properties
-    private active: boolean;
-    private difficulty: string;
-    private night: number;
-    aiLvl: number = 0;
+    protected active: boolean = true;
+    protected doorDmg = 1;
+    protected difficulty: string;
+    protected night: number;
+    protected aiLvl: number = 0;
+    protected lastTurnAtDoor: boolean = false;
+    protected attacking: boolean = false;
     protected pos: MoveNode | undefined;
-    readonly moveInt: number | undefined;
+    protected readonly moveInt: number | undefined;
 
 
     constructor(difficulty: string, night: number) {
@@ -19,8 +22,7 @@ class Animatronic {
         this.aiLvl;
     }
 
-    public canMove(): boolean{
-        if(!this.activate) {
+    public canMove(): boolean {
 
         let rand : number = Math.round(Math.random() * 20);
         if (rand <= this.aiLvl) {
@@ -28,8 +30,14 @@ class Animatronic {
             return true;
         }
         console.log("Attmepted to move");
+        return false;
     }
-    return false;
+    public getMoveInt(): number {
+        if(this.moveInt !== undefined) {
+            return this.moveInt;
+        } else {
+            return 3;
+        }
     }
 
     public getPos(): string {
@@ -39,21 +47,53 @@ class Animatronic {
             console.log("position not available");
             return "position not available";
         }
-        
+    }
+
+    public isAttacking(): boolean {
+        return this.attacking;
+    }
+
+    public toggleAttacking(): void {
+        this.attacking = !this.attacking;
+    }
+
+    public getLastTurnAtDoor(): boolean {
+        return this.lastTurnAtDoor;
+    }
+
+    public toggleLastTurnAtDoor() {
+        if(this.lastTurnAtDoor) {
+            this.lastTurnAtDoor = false;
+            this.setAiLvl(this.getAiLvl() - 2);
+        } else {
+            this.setAiLvl(this.getAiLvl() + 2);
+            this.lastTurnAtDoor = true;
+        }
     }
 
 
-    public move(): void {
-
+    public forceMove(cam: string): void {
+        let temp;
+        if(this.pos != undefined) {
+            temp = this.pos.chooseNode(cam);
+        } else {
+            console.log("undefined Position");
+            return;
+        }
+        if(temp instanceof MoveNode) {
+            this.pos = temp;
+            camFeed.updateCamFeed(this.pos.getName(), this.pos.getSrc());
+        } else {
+            console.log(temp);
+        }
     }
 
     public aiReaval(hr: number): void {
 
     }
     
-    public attack(): void {
-        this.active = false; 
-        console.log(this.toString(), "is attacking!");
+    public attack() {
+        this.active = false;
     }
 
     public getNight(): number | undefined {
@@ -61,6 +101,10 @@ class Animatronic {
             return this.night;
         }
         return undefined;
+    }
+
+    public move() {
+
     }
 
     public getAiLvl(): number {
@@ -71,6 +115,10 @@ class Animatronic {
         if(lvl <= 20 && lvl >= 0) {
             this.aiLvl = lvl;
         }
+    }
+
+    public isActive(): boolean {
+        return this.active;
     }
 
     public activate(): void {

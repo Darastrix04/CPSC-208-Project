@@ -1,10 +1,13 @@
 import audioHandler from "./SFX";
+
+
+
 class Camera {
+    private isUsingCam = false;
     private lastCam: string = "1A";
     private cameras = new Map<string, string>();
     private canRun: boolean = false;
     private emptyCameras = new Map<string, string>();
-    private readonly kitchenAudio = new Audio("ASSETS/SFX/cameras/kitchen/sfx_fumbling_kitchen_short.mp3");
 
     constructor() {
         this.cameras.set("1A", "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_everyone.png");
@@ -21,6 +24,7 @@ class Camera {
         this.emptyCameras = new Map(this.cameras);
     }
     public show(): void {
+        this.isUsingCam = true;
         const cameraSection = document.getElementById("cameraSection");
         const cameraMonitor = document.getElementById("cameraScene") as HTMLImageElement | null;
         const cameraMap = cameraSection?.querySelector<HTMLElement>(".camera-map");
@@ -46,6 +50,7 @@ class Camera {
         }, 30);
     }
     public close(): void {
+        this.isUsingCam = false;
         const cameraSection = document.getElementById("cameraSection");
         const cameraMonitor = document.getElementById("cameraScene") as HTMLImageElement | null;
         const cameraMap = cameraSection?.querySelector<HTMLElement>(".camera-map");
@@ -67,13 +72,16 @@ class Camera {
         }, 30);
     }
 
+    public getIsUsingCam(): boolean {
+        return this.isUsingCam;
+    }
+
 
     public getCamFeed(cam: string): string | undefined {
         return this.cameras.get(cam);
     }
 
     public isOccupied(cam: string): boolean {
-        if (cam !== "1B") return false;
         return this.cameras.get(cam) !== this.emptyCameras.get(cam);
     }
 
@@ -82,39 +90,49 @@ class Camera {
             audioHandler.playSFX(audioHandler.SFX.cam_switch);
         }
             this.lastCam = cam;
-            let cameraMonitor = document.getElementById("cameraScene") as HTMLImageElement;
+            const cameraMonitor = document.getElementById("cameraScene") as HTMLImageElement;
             if (cam === "6" && camFeed.getCamFeed("6") !== "ASSETS/TEXTURES/OFFICE/office_bottom_layer.png") {
                 cameraMonitor.src = "ASSETS/TEXTURES/OFFICE/office_bottom_layer.png";
-                if (this.kitchenAudio.paused) {
-                    this.kitchenAudio.currentTime = 0;
-                    this.kitchenAudio.play();
+                if(this.getCamFeed("6") === "ASSETS/SFX/cameras/kitchen/sfx_fumbling_kitchen_short.mp3") {
+                    audioHandler.playSFX(audioHandler.SFX.chica_kitchen_audio);
+                } else {
+                    audioHandler.playSFX(audioHandler.SFX.freddy_kitchen_audio);
                 }
             } else if(cam === "2A" && this.canRun){
                 let frame = 1;
+                audioHandler.playSFX(audioHandler.SFX.foxy_running)
                 const animation = setInterval(() => {
                     cameraMonitor.src = `ASSETS/TEXTURES/CAMERA/west_hall/foxy_running/foxy_running_${frame}.png`;
                     frame++;
                     if (frame > 29) {
                         clearInterval(animation);
                         cameraMonitor.src = this.getCamFeed(this.lastCam) ?? "";
-                        this.setFoxyRun(false);
                     }
                 }, 20);
+                this.setFoxyRun(false);
             } else {
-                this.kitchenAudio.pause();
-                this.kitchenAudio.currentTime = 0;
+                audioHandler.stopSFX(audioHandler.SFX.chica_kitchen_audio);
+                audioHandler.stopSFX(audioHandler.SFX.freddy_kitchen_audio);
                 cameraMonitor.src = this.cameras.get(cam) ?? "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_everyone.png";
             }
     }
     public updateCamFeed(cam: string, src: string) {
         this.cameras.set(cam, src);
         if(cam === this.lastCam && cam !== "1A") {
-            this.setCameraFeed(cam)
+            this.setCameraFeed(cam);
         }
     }
 
     public setFoxyRun(canRun: boolean) {
         this.canRun = canRun;
+    }
+
+    public getFoxyRun(): boolean {
+        return this.canRun;
+    }
+
+    public resetAllCams() {
+        this.cameras = new Map(this.emptyCameras);
     }
 
 

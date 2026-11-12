@@ -1,6 +1,7 @@
 import Animatronic from "./Animatronic";
 import camFeed from "../Camera";
 import MoveNode from "./MoveNode";
+import audioHandler from "../SFX";
 
 class Bonnie extends Animatronic{
     readonly moveInt: number = 5;
@@ -37,13 +38,14 @@ class Bonnie extends Animatronic{
         const room2A = new MoveNode("2A", "ASSETS/TEXTURES/CAMERA/west_hall/west_hall_bonnie.png");
         const room2B = new MoveNode("2B", "ASSETS/TEXTURES/CAMERA/w_hall_corner/w_hall_corner_bonnie_1.png");
         const room3 = new MoveNode("3", "ASSETS/TEXTURES/CAMERA/supply_closet/supply_closet_bonnie.png");
+        const leftDoor = new MoveNode("leftDoor", "");
         room1A.addNode(room5, room1B);
         room5.addNode(room1B, room2A);
         room1B.addNode(room5, room2A);
         room2A.addNode(room5, room1B, room3, room2B);
         room3.addNode(room2A, room2B);
-        room2B.addNode(room3, room2A);
-        this.aiLvl += 3; //remove this after the presentation
+        room2B.addNode(room3, room2A, leftDoor);
+        leftDoor.addNode(room2B);
         this.pos = room1A;
     }
 
@@ -63,19 +65,36 @@ class Bonnie extends Animatronic{
         }else {
             camFeed.updateCamEmpty(currentRoom);
         }
-
         this.pos = next;
-        camFeed.updateCamFeed(next.getName(), next.getSrc());
+        if(camFeed.getFoxyRun() || (this.getPos() === "leftDoor" || currentRoom === "leftDoor")) {
+            this.toggleLastTurnAtDoor();
+        } else {
+            camFeed.updateCamFeed(this.pos.getName(), this.pos.getSrc());
+        }
         console.log(`Bonnie moved to ${next.getName()}`);
     } else {
         console.log(`Bonnie couldn't move because ${next.getName()} is occupied`);
     }
-
-    console.log("NEW BONNIE MOVE METHOD LOADED");
-
 }
 
-    override aiReaval(hr: number): void {
+
+
+    public override attack(): void {
+        document.getElementById("cameraMonitor")?.setAttribute("style", "Display: none;");
+        console.log("bonnie attacked");
+        let frame = 1;
+        const jumpscare = document.getElementById("topLayer") as HTMLImageElement;
+        audioHandler.playSFX(audioHandler.SFX.foxy_scream);
+        const animation = setInterval(() => {
+            jumpscare.src = `ASSETS/TEXTURES/OFFICE/2-BONNIE/${frame}.png`;
+            frame++;
+            if (frame > 11) {
+                clearInterval(animation);
+            }
+        }, 80);
+    }
+
+    public override aiReaval(hr: number): void {
         switch(hr) {
             case 2:
                 this.aiLvl++;

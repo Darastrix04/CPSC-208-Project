@@ -18,6 +18,15 @@ class MoveNode {
         return this.nodes[rand] as MoveNode;
     }
 
+    public chooseNode(camName: string): MoveNode | string {
+        this.nodes.forEach(node => {
+            if(node.getName() === camName) {
+                return node;
+            }
+        });
+        return "node not found";
+    }
+
     public getName(): string {
         return this.name;
     }

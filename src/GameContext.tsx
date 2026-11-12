@@ -15,7 +15,8 @@ export interface GameContextType {
     isAtLeftDoor: boolean,
     isAtRightDoor: boolean,
     setAtLeftDoor: (isAtDoor: boolean) => void,
-    setAtRightDoor: (isAtDoor: boolean) => void
+    setAtRightDoor: (isAtDoor: boolean) => void,
+    pause: (ms: number) => Promise<void>,
 }
 
 const GameContext = createContext<GameContextType | null>(null);

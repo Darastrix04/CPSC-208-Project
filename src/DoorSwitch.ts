@@ -2,6 +2,7 @@ import type Animatronic from "./Animatronics/Animatronic";
 import Door from "./Door";
 import Light from "./Light";
 import audioHandler from "./SFX";
+import { useGame } from "./GameContext";
 
 export default class DoorSwitch {
     private switch: HTMLImageElement;
@@ -11,7 +12,7 @@ export default class DoorSwitch {
     private light: Light;
     private door: Door;
 
-    constructor(switchSide: HTMLImageElement, isAtDoor: boolean) {
+    constructor(switchSide: HTMLImageElement) {
         if(switchSide.id == "leftSwitch") {
             this.side = "left";
             
@@ -19,10 +20,10 @@ export default class DoorSwitch {
             this.side = "right";
         }
         this.door = new Door(document.getElementById(`${this.side}Door`) as HTMLImageElement);
-        this.light = new Light(this.side, isAtDoor);
+        this.light = new Light(this.side);
         this.switch = switchSide;
     }
-    public checkClickPostion(X: number, Y: number, isLightRelease: boolean) {
+    public checkClickPostion(X: number, Y: number, isLightRelease: boolean, isAtDoor: boolean) {
         const button = this.switch.getBoundingClientRect();
         const PosX = X - button.left;
         const PosY = Y - button.top;
@@ -44,8 +45,24 @@ export default class DoorSwitch {
                 }
             }
         } else {
-            this.toggleLight();
+            this.toggleLight(isAtDoor);
             this.toggleSwitch();
+        }
+    }
+
+    public getIsLightOn(): boolean {
+        if(this.isLightOn == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public getIsDoorClosed(): boolean {
+        if(this.isDoorClosed == true) {
+            return true;
+        } else {
+            return false;
         }
     }
     
@@ -55,8 +72,8 @@ export default class DoorSwitch {
         this.isDoorClosed = !this.isDoorClosed;
     }
 
-    public toggleLight(): void {
-        this.light.toggleLight();
+    public toggleLight(isAtDoor: boolean): void {
+        this.light.toggleLight(isAtDoor);
         this.isLightOn = !this.isLightOn;
     }
 

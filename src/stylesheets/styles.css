@@ -45,7 +45,7 @@
     height: 100%;
     opacity: 100;
     object-fit: cover;
-    z-index: -1;
+    z-index: 0;
 }
 .settingsText {
     color: rgb(166, 220, 255);
@@ -326,18 +326,20 @@
     opacity: 0;
 }
 #backgroundCutScene {
-    z-index: -10;
     position: absolute;
     height: 100%;
     width: 100%;
+    overflow: hidden;
     display: none;
 }
 .cut-scene-text {
+    z-index: 1;
     color: white;
     font-size: 300%;
     position: fixed;
     top: 50%;
     left: 50%;
+    transition: opacity 3s ease-in;
     transform: translate(-50%, -50%);
     flex-direction: column;
     align-items: center;
@@ -346,6 +348,10 @@
     text-align: center;
     display: none;
 }
-#gameView {
-
+#staticScene {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    display: none;
 }

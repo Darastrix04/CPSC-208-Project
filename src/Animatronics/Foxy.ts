@@ -1,11 +1,12 @@
 import camFeed from "../Camera";
+import audioHandler from "../SFX";
 import Animatronic from "./Animatronic";
 import MoveNode from "./MoveNode";
 
 
 
 class Foxy extends Animatronic{
-    readonly moveInt: number = 5.5;
+    readonly moveInt: number = 6;
     private position: number = 0;
     constructor(difficulty: string, night: number) {
         super(difficulty, night);
@@ -35,23 +36,49 @@ class Foxy extends Animatronic{
     }
 
 
-    override move(): void {
-        this.position++;
-        switch(this.position) {
-            case 1: camFeed.updateCamFeed("1C", "ASSETS/TEXTURES/CAMERA/pirate_cove/pirate_cove_2.png");
-            break;
-            case 2: camFeed.updateCamFeed("1C", "ASSETS/TEXTURES/CAMERA/pirate_cove/pirate_cove_3.png")
-            break;
-            case 3: camFeed.updateCamFeed("1C", "ASSETS/TEXTURES/CAMERA/pirate_cove/pirate_cove_4.png")
-            break;
+
+    public override attack() {
+        document.getElementById("cameraMonitor")?.setAttribute("style", "Display: none;");
+            console.log("foxy attacked");
+            let frame = 1;
+            const jumpscare = document.getElementById("topLayer") as HTMLImageElement;
+            audioHandler.playSFX(audioHandler.SFX.foxy_scream);
+            document.getElementById("leftDoor")?.setAttribute("style", "Display: none;");
+            const animation = setInterval(() => {
+                jumpscare.src = `ASSETS/TEXTURES/OFFICE/FOXY/${frame}.png`;
+                frame++;
+                if (frame > 21) {
+                    clearInterval(animation);
+                }
+            }, 40);
         }
-        if(this.position == 4) {
+
+
+    public override move() {
+        if(!camFeed.getIsUsingCam() && camFeed.getLastCam() !== "1C") {
+            this.position++;
+            switch(this.position) {
+                case 0: camFeed.updateCamFeed("1C", "ASSETS/TEXTURES/CAMERA/pirate_cove/pirate_cove_1.png");
+                break;
+                case 1: camFeed.updateCamFeed("1C", "ASSETS/TEXTURES/CAMERA/pirate_cove/pirate_cove_2.png");
+                break;
+                case 2: camFeed.updateCamFeed("1C", "ASSETS/TEXTURES/CAMERA/pirate_cove/pirate_cove_3.png")
+                break;
+                case 3: camFeed.updateCamFeed("1C", "ASSETS/TEXTURES/CAMERA/pirate_cove/pirate_cove_4.png")
+                break;
+        }
+        if(this.position === 4) {
             camFeed.setFoxyRun(true);
-            //send in attack here
-            //set timer for 25 seconds
-            camFeed.updateCamFeed("1C", "ASSETS/TEXTURES/CAMERA/pirate_cove/pirate_cove_1.png");
-            this.position = 0;
         }
+    }
+}
+
+    public getPosition(): number {
+        return this.position;
+    }
+
+    public setPosition(pos:number) {
+        this.position = pos;
     }
 
     override aiReaval(hr: number): void {

@@ -8,13 +8,17 @@ interface GameProvideProps {
 }
 
 const GameProvider = ({children}: GameProvideProps) => {
-    const SECONDS = 2; //how many seconds equal 1 hr
+    const SECONDS = 90; //how many seconds equal 1 hr
     const [isUsingCam, setIsUsingCam] = useState(false);
     const [time, setTime] = useState(0);
     const [hr, setHr] = useState(12);
     const [battery, setBattery] = useState(100);
     const [isAtLeftDoor, setAtLeftDoor] = useState(false);
     const [isAtRightDoor, setAtRightDoor] = useState(false);
+    const [canFoxyRun, setCanFoxyRun] = useState(false);
+    const pause = (ms: number): Promise<void> => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    };
 
     const value: GameContextType = {
         time,
@@ -29,7 +33,8 @@ const GameProvider = ({children}: GameProvideProps) => {
         setAtLeftDoor,
         setAtRightDoor,
         isAtLeftDoor,
-        isAtRightDoor
+        isAtRightDoor,
+        pause
     }
     
     return (

@@ -2,14 +2,21 @@ import { useEffect } from "react";
 import { useGlobal } from "./GlobalContext";
 import { Pages, usePage } from "./PageContext";
 import audioHandler from "./SFX";
+import { useGame } from "./GameContext";
 
 
 function MainMenu() {
     const {setDisplay} = usePage();
-    const {setNight} = useGlobal();
+    const {setNight, volume} = useGlobal();
 
 
     useEffect(() => {
+        Object.values(audioHandler.SFX).forEach(sfx => {
+            sfx.volume = volume / 100;
+        });
+        Object.values(audioHandler.BACKGROUND_SFX).forEach(sfx => {
+            sfx.volume = volume / 100;
+        });
         audioHandler.playSFX(audioHandler.SFX.main_menu);
     }, []);
 
