@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useGame } from "./GameContext";
 import audioHandler from "./SFX";
 
 export default class Light {

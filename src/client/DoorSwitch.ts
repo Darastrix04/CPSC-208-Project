@@ -1,8 +1,6 @@
-import type Animatronic from "./Animatronics/Animatronic";
 import Door from "./Door";
 import Light from "./Light";
 import audioHandler from "./SFX";
-import { useGame } from "./GameContext";
 
 export default class DoorSwitch {
     private switch: HTMLImageElement;

@@ -1,16 +1,15 @@
 
 import camFeed from "./Camera";
 import { useGame } from "./GameContext";
-import GameHUD from "./GameHUD";
-import { useGlobal } from "./GlobalContext";
 import audioHandler from "./SFX";
 
 
 export default function CameraView() {
     const {isUsingCam, setIsUsingCam} = useGame();
 
-    return (<>
-    <div className="camera-button">
+    return (
+        <div id="cameraView">
+            <div className="camera-button">
             <img
             id="cameraMonitor"
             src="/ASSETS/TEXTURES/OFFICE/camera_button.png"
@@ -25,10 +24,9 @@ export default function CameraView() {
             }
         }}
         draggable={false}
-    />
+        />
     </div>
     <div id="cameraSection">
-        <GameHUD />
         <img className='camera-scene' id='cameraScene' src=''></img>
         <div className='camera-map' draggable={false}>
         <img id='selectedMapButton'/>
@@ -47,5 +45,5 @@ export default function CameraView() {
         <img className='camera-feed-image' draggable={false} id='cameraFeed' src='ASSETS/TEXTURES/CAMERA/camera_map.png'></img>
         </div>
     </div>
-    </>);
+    </div>);
 }

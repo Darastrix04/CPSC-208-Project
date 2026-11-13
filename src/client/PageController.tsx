@@ -1,6 +1,5 @@
 // import Game from "./Game";
 import Game from "./Game";
-import { useGame } from "./GameContext";
 import GameProvider from "./GameProvider";
 import MainMenu from "./MainMenu";
 import Options from "./Options";

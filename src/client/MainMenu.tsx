@@ -20,8 +20,7 @@ function MainMenu() {
         audioHandler.playSFX(audioHandler.SFX.main_menu);
     }, []);
 
-
-
+    
     return (
         <>
         <div id="cutSceneText" className="cut-scene-text">
