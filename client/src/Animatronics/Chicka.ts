@@ -78,18 +78,17 @@ class Chicka extends Animatronic{
 }
 
     public override attack(): void {
-        document.getElementById("cameraMonitor")?.setAttribute("style", "Display: none;");
-        console.log("chica attacked");
-        let frame = 1;
-        const jumpscare = document.getElementById("topLayer") as HTMLImageElement;
-        audioHandler.playSFX(audioHandler.SFX.foxy_scream);
-        const animation = setInterval(() => {
-            jumpscare.src = `ASSETS/TEXTURES/OFFICE/3-CHICA/${frame}.png`;
-            frame++;
-            if (frame > 16) {
-                clearInterval(animation);
+        this.anim.animate(
+            document.getElementById("topLayer") as HTMLImageElement,
+            16,
+            "ASSETS/TEXTURES/OFFICE/3-CHICA/",
+            80,
+            () => {
+                document.getElementById("cameraMonitor")?.setAttribute("style", "Display: none;");
+                audioHandler.playSFX(audioHandler.SFX.foxy_scream);
+                console.log("chica attacked");
             }
-        }, 80);
+        );
     }
 
 

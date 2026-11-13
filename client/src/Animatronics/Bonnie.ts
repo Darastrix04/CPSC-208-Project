@@ -80,18 +80,13 @@ class Bonnie extends Animatronic{
 
 
     public override attack(): void {
-        document.getElementById("cameraMonitor")?.setAttribute("style", "Display: none;");
+        this.anim.animate(document.getElementById("topLayer") as HTMLImageElement,
+    11,
+    "ASSETS/TEXTURES/OFFICE/2-BONNIE/",
+    80,
+    () => {
         console.log("bonnie attacked");
-        let frame = 1;
-        const jumpscare = document.getElementById("topLayer") as HTMLImageElement;
-        audioHandler.playSFX(audioHandler.SFX.foxy_scream);
-        const animation = setInterval(() => {
-            jumpscare.src = `ASSETS/TEXTURES/OFFICE/2-BONNIE/${frame}.png`;
-            frame++;
-            if (frame > 11) {
-                clearInterval(animation);
-            }
-        }, 80);
+        audioHandler.playSFX(audioHandler.SFX.foxy_scream);})
     }
 
     public override aiReaval(hr: number): void {

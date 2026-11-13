@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { GameContext, type GameContextType } from "./GameContext";
-import Animatronic from "./Animatronics/Animatronic";
 
 
 interface GameProvideProps {

@@ -38,20 +38,18 @@ class Foxy extends Animatronic{
 
 
     public override attack() {
-        document.getElementById("cameraMonitor")?.setAttribute("style", "Display: none;");
-            console.log("foxy attacked");
-            let frame = 1;
-            const jumpscare = document.getElementById("topLayer") as HTMLImageElement;
-            audioHandler.playSFX(audioHandler.SFX.foxy_scream);
-            document.getElementById("leftDoor")?.setAttribute("style", "Display: none;");
-            const animation = setInterval(() => {
-                jumpscare.src = `ASSETS/TEXTURES/OFFICE/FOXY/${frame}.png`;
-                frame++;
-                if (frame > 21) {
-                    clearInterval(animation);
-                }
-            }, 40);
-        }
+        this.anim.animate(
+            document.getElementById("topLayer") as HTMLImageElement,
+            21,
+            "ASSETS/TEXTURES/OFFICE/FOXY/",
+            40,
+            () => {
+                console.log("foxy attacked");
+                audioHandler.playSFX(audioHandler.SFX.foxy_scream);
+                document.getElementById("leftDoor")?.setAttribute("style", "Display: none;");
+            }
+        )
+    }
 
 
     public override move() {

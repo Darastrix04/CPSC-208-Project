@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useGlobal } from "./GlobalContext";
 import { Pages, usePage } from "./PageContext";
 import audioHandler from "./SFX";
-import { useGame } from "./GameContext";
 
 
 function MainMenu() {
@@ -20,8 +19,7 @@ function MainMenu() {
         audioHandler.playSFX(audioHandler.SFX.main_menu);
     }, []);
 
-
-
+    
     return (
         <>
         <div id="cutSceneText" className="cut-scene-text">

@@ -4,8 +4,6 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     mode: "development",
-
-    // Set this to the file that calls createRoot()
     entry: "./src/App.tsx",
 
     output: {
@@ -42,13 +40,13 @@ module.exports = {
 
     plugins: [
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, "src/index.html")
+            template: path.resolve(__dirname, "./src/index.html")
         }),
 
         new CopyWebpackPlugin({
             patterns: [
                 {
-                    from: path.resolve(__dirname, "src/ASSETS"),
+                    from: path.resolve(__dirname, "./src/ASSETS"),
                     to: "ASSETS"
                 }
             ]

@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import PageController from "./PageController";
 import { createRoot } from "react-dom/client";
 import PageProvider from "./PageProvider";
-import Animatronic from "./Animatronics/Animatronic";
 import GlobalProvider from "./GlobalProvider";
 import "./stylesheets/styles.css";
 

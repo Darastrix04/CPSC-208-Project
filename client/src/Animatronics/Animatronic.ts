@@ -1,6 +1,7 @@
 
 import camFeed from "../Camera";
 import MoveNode from "./MoveNode";
+import AnimateFrames from "../AnimateFrames";
 
 class Animatronic {
     // Properties
@@ -13,6 +14,7 @@ class Animatronic {
     protected attacking: boolean = false;
     protected pos: MoveNode | undefined;
     protected readonly moveInt: number | undefined;
+    protected readonly anim: AnimateFrames = new AnimateFrames;
 
 
     constructor(difficulty: string, night: number) {
@@ -32,6 +34,7 @@ class Animatronic {
         console.log("Attmepted to move");
         return false;
     }
+
     public getMoveInt(): number {
         if(this.moveInt !== undefined) {
             return this.moveInt;
@@ -61,7 +64,7 @@ class Animatronic {
         return this.lastTurnAtDoor;
     }
 
-    public toggleLastTurnAtDoor() {
+    protected toggleLastTurnAtDoor() {
         if(this.lastTurnAtDoor) {
             this.lastTurnAtDoor = false;
             this.setAiLvl(this.getAiLvl() - 2);
@@ -70,7 +73,6 @@ class Animatronic {
             this.lastTurnAtDoor = true;
         }
     }
-
 
     public forceMove(cam: string): void {
         let temp;
@@ -94,13 +96,6 @@ class Animatronic {
     
     public attack() {
         this.active = false;
-    }
-
-    public getNight(): number | undefined {
-        if(this.night != null || this.night != undefined) {
-            return this.night;
-        }
-        return undefined;
     }
 
     public move() {

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import {Pages, usePage } from "./PageContext";
+import {Pages, usePage } from "./PageContext"
 import Animatronic from "./Animatronics/Animatronic";
 import { useGlobal } from "./GlobalContext";
 import audioHandler from "./SFX";
@@ -9,10 +9,13 @@ import { useGame } from "./GameContext";
 import Bonnie from "./Animatronics/Bonnie";
 import Chicka from "./Animatronics/Chicka";
 import Foxy from "./Animatronics/Foxy";
-import Door from "./Door";
 import Freddy from "./Animatronics/Freddy";
 import CameraView from "./CameraView";
 import GameHUD from "./GameHUD";
+import CutsceneView from "./CutSceneView";
+import Office from "./Office";
+import OfficeScene from "./OfficeScene";
+
     
 export default function Game() {
     const isAnimatronicAttacking = useRef(false);
@@ -23,7 +26,7 @@ export default function Game() {
     
     const {setDisplay, display} = usePage();
     const {night, setNight, difficulty, volume} = useGlobal();
-    const {setHr,pause, hr,SECONDS,time, setTime,battery,setBattery,isUsingCam,setIsUsingCam, isAtLeftDoor, isAtRightDoor, setAtLeftDoor, setAtRightDoor} = useGame();
+    const {setHr,pause, hr,SECONDS,time, setTime,battery,setBattery, isAtLeftDoor, isAtRightDoor, setAtLeftDoor, setAtRightDoor} = useGame();
 
     const animatronics = useMemo<Animatronic[]>(() => {
         return [new Bonnie(difficulty, night), new Chicka(difficulty, night), new Foxy(difficulty,night), new Freddy(difficulty, night)];
@@ -304,6 +307,8 @@ export default function Game() {
             camFeed.close();
         }
         document.getElementById("gameView")?.setAttribute("style", "display: none;");
+        document.getElementById("cameraView")?.setAttribute("style", "display: none;");
+        document.getElementById("HUD")?.setAttribute("style", "display: none;");
         document.getElementById("cutSceneText")?.setAttribute("style", "display: block;");
         document.getElementById("backgroundCutScene")?.setAttribute("style", "display: block;");
         audioHandler.playSFX(audioHandler.SFX.victory_bell);
@@ -323,6 +328,8 @@ export default function Game() {
         document.getElementById("cutSceneNightText")!.textContent = `night ${night + 1}`;
         await pause(5000);
         document.getElementById("cutSceneText")?.setAttribute("style", "display: none;");
+        document.getElementById("cameraView")?.setAttribute("style", "display: block;");
+        document.getElementById("HUD")?.setAttribute("style", "display: block;");
         document.getElementById("gameView")?.setAttribute("style", "display: block;");
         document.getElementById("backgroundCutScene")?.setAttribute("style", "display: none;");
         setNight(night + 1);
@@ -348,121 +355,23 @@ export default function Game() {
             }
         }
         }, 40);
-    }
-
-
-
-
-
-
-
-
-
-
-
-    useEffect(() => {
+    } 
     
-        const viewport = document.getElementById("viewport");
-        const scene = document.getElementById("scene");
     
-        let targetX = 0;
-        let currentX = 0;
-        let maxPan = 0;
-        let init = false;
-    
-        function mouseMovment(event: MouseEvent) {
-            const rect = viewport!.getBoundingClientRect();
-            const mouseX = Math.max(0, Math.min(1,
-                (event.clientX - rect.left) / rect.width
-            ));
-            targetX = -mouseX * maxPan;
-        }
-    
-        function animate() {
-            currentX += (targetX - currentX) * 0.12;
-            scene!.style.transform = `translateX(${currentX}px)`;
-            requestAnimationFrame(animate);
-        }
-    
-        function updateBounds() {
-            let prevPan = maxPan;
-            maxPan = Math.max(0, scene!.offsetWidth - viewport!.clientWidth);
-            if (!init) {
-                targetX = -maxPan / 2;
-                currentX = targetX;
-                init = true;
-            } else if (prevPan != maxPan) {
-                if(prevPan > 0){
-                    targetX = targetX / prevPan * maxPan;
-                    currentX = currentX / prevPan * maxPan;
-                }
-            }
-            scene!.style.transform = `translateX(${currentX}px)`;
-        }
-        updateBounds();
-        viewport!.addEventListener("mousemove", mouseMovment);
-        document.getElementById("topLayer")!.addEventListener("load", updateBounds);
-        animate();
-    }, [display]);
-
-
     return (
     <>
-    <CameraView />
+    <CutsceneView night={night} />
     <GameHUD />
-    <div id="cutSceneText" className="cut-scene-text">
-        <div id="cutSceneHr">
-            5 AM
-        </div>
-        <div id="cutSceneNightText">
-            night {night}
-        </div>
-    </div>
-    <img id="staticScene" src="ASSETS/TEXTURES/OFFICE/office_bottom_layer.png"/>
-    <img id="backgroundCutScene" src="ASSETS/TEXTURES/OFFICE/office_bottom_layer.png"/>
-    <div id="gameView">
-        <GameHUD />
-        <div id="viewport">
-            <div id="scene">
-                <img
-                className="scene-office"
-                id='topLayer'
-                src="/ASSETS/TEXTURES/OFFICE/office_top_layer.png"
-                alt="Game Screen"
-                draggable={false}
-                />
-                <img
-                src="/ASSETS/TEXTURES/OFFICE/switches/switch_left_door&light_off.png"
-                id="leftSwitch"
-                className="left-switch user-select-none"
-                onPointerDown={(event) => {leftSwitch.current?.checkClickPostion(event.clientX, event.clientY, false, isAtLeftDoor)}}
-                onPointerUp={(event) => {leftSwitch.current?.checkClickPostion(event.clientX, event.clientY, true, isAtLeftDoor)}}
-                draggable={false}
-                />
-                <img
-                src="/ASSETS/TEXTURES/OFFICE/switches/switch_right_door&light_off.png"
-                id="rightSwitch"
-                className="right-switch user-select-none"
-                onPointerDown={(event) => {rightSwitch.current?.checkClickPostion(event.clientX, event.clientY, false, isAtRightDoor)}}
-                onPointerUp={(event) => {rightSwitch.current?.checkClickPostion(event.clientX, event.clientY, true, isAtRightDoor)}}
-                draggable={false}
-                />
-                <img
-                src="/ASSETS/TEXTURES/OFFICE/doors/door_left_normal.png"
-                id="leftDoor"
-                className='office-door'
-                draggable={false}
-                />
-                <img
-                src="/ASSETS/TEXTURES/OFFICE/doors/door_right_normal.png"
-                id="rightDoor"
-                className='office-door'
-                draggable={false}
-                />
-            </div>
-        </div>
-        </div>
-        </>
+    <CameraView />
+    <Office>
+        <OfficeScene
+            leftSwitch={leftSwitch}
+            rightSwitch={rightSwitch}
+            isAtLeftDoor={isAtLeftDoor}
+            isAtRightDoor={isAtRightDoor}
+        />
+    </Office>
+    </>
     );
 }
 

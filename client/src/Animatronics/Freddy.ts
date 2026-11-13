@@ -65,7 +65,7 @@ class Freddy extends Animatronic{
                     camFeed.updateCamFeed(next.getName(), next.getSrc());
                 }
             }
-            console.log(`Freddy moved to ${next.getName()}`);
+            console.log(`Freddy moved to ${this.getPos()}`);
             audioHandler.playSFX(audioHandler.SFX.freddy_laugh);
         } else {
             console.log("freddy attempted to move, but there is someone still on stage with him or someone is looking at him");
@@ -73,31 +73,32 @@ class Freddy extends Animatronic{
     }
 
     public override attack() {
-        document.getElementById("cameraMonitor")?.setAttribute("style", "Display: none;");
+        const jumpscare = document.getElementById("topLayer") as HTMLImageElement;
         if((camFeed.getIsUsingCam() && camFeed.getLastCam() !== "4B") || (!camFeed.getIsUsingCam())) {
-            console.log("Freddy attacked");
-            let frame = 1;
-            const jumpscare = document.getElementById("topLayer") as HTMLImageElement;
-            audioHandler.playSFX(audioHandler.SFX.foxy_scream);
-            document.getElementById("rightDoor")?.setAttribute("style", "Display: none;");
-            if(jumpscare.src.endsWith("office_top_layer.png") ){
-                const animation = setInterval(() => {
-                    jumpscare.src = `/ASSETS/TEXTURES/OFFICE/1-FREDDY/${frame}.png`;
-                    frame++;
-                    if (frame > 29) {
-                        clearInterval(animation);
-                    }
-                }, 40);
-            } else if(jumpscare.src.endsWith("office_dark.png")) {
-                const animation = setInterval(() => {
-                    jumpscare.src = `/ASSETS/TEXTURES/OFFICE/1-FREDDY_LIGHTS_OUT/${frame}.png`;
-                    frame++;
-                    if (frame > 20) {
-                        clearInterval(animation);
-                    }
-                }, 40);
+            this.anim.animate(
+                jumpscare,
+                29,
+                "/ASSETS/TEXTURES/OFFICE/1-FREDDY/",
+                40,
+                () => {
+                    console.log("Freddy attacked");
+                    audioHandler.playSFX(audioHandler.SFX.foxy_scream);
+                    document.getElementById("rightDoor")?.setAttribute("style", "Display: none;");
+                }
+            )
+        } else if ((document.getElementById("topLayer") as HTMLImageElement).src.endsWith("office_dark.png")){
+            this.anim.animate(
+                jumpscare,
+                20,
+                "/ASSETS/TEXTURES/OFFICE/1-FREDDY_LIGHTS_OUT/",
+                40,
+                () => {
+                    console.log("Freddy attacked");
+                    audioHandler.playSFX(audioHandler.SFX.foxy_scream);
+                    document.getElementById("rightDoor")?.setAttribute("style", "Display: none;");
+                }
 
-            }
+            )
         } else {
             console.log("player was looking at freddy during attack chance");
         }

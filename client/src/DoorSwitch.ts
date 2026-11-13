@@ -1,8 +1,6 @@
-import type Animatronic from "./Animatronics/Animatronic";
 import Door from "./Door";
 import Light from "./Light";
 import audioHandler from "./SFX";
-import { useGame } from "./GameContext";
 
 export default class DoorSwitch {
     private switch: HTMLImageElement;
@@ -23,7 +21,7 @@ export default class DoorSwitch {
         this.light = new Light(this.side);
         this.switch = switchSide;
     }
-    public checkClickPostion(X: number, Y: number, isLightRelease: boolean, isAtDoor: boolean) {
+    public checkClickPostion(X: number, Y: number, isLightRelease: boolean, isAtDoor: boolean): void {
         const button = this.switch.getBoundingClientRect();
         const PosX = X - button.left;
         const PosY = Y - button.top;
