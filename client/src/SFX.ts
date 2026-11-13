@@ -56,12 +56,18 @@ class SFX {
     }
 
     public playSFX(audio: HTMLAudioElement) {
-        if(!(audio instanceof Audio)) {return;}
-        const sound = audio;
-        sound.volume = audio.volume;
-        sound.currentTime = 0;
-        this.activeSFX.push(audio);
-        sound.play();
+        try {
+            if(!(audio instanceof Audio)) {return;}
+            const sound = audio;
+            sound.volume = audio.volume;
+            sound.currentTime = 0;
+            sound.play().catch(error => {
+                console.error("Failed to play Audio File:", error);
+            });
+            this.activeSFX.push(audio);
+        } catch(error) {
+            console.error("SFX error:", error);
+        }
     }
 
     public stopSFX(audio: HTMLAudioElement): void {

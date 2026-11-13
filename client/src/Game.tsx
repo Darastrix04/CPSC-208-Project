@@ -15,6 +15,7 @@ import GameHUD from "./GameHUD";
 import CutsceneView from "./CutSceneView";
 import Office from "./Office";
 import OfficeScene from "./OfficeScene";
+
     
 export default function Game() {
     const isAnimatronicAttacking = useRef(false);
@@ -306,6 +307,8 @@ export default function Game() {
             camFeed.close();
         }
         document.getElementById("gameView")?.setAttribute("style", "display: none;");
+        document.getElementById("cameraView")?.setAttribute("style", "display: none;");
+        document.getElementById("HUD")?.setAttribute("style", "display: none;");
         document.getElementById("cutSceneText")?.setAttribute("style", "display: block;");
         document.getElementById("backgroundCutScene")?.setAttribute("style", "display: block;");
         audioHandler.playSFX(audioHandler.SFX.victory_bell);
@@ -325,6 +328,8 @@ export default function Game() {
         document.getElementById("cutSceneNightText")!.textContent = `night ${night + 1}`;
         await pause(5000);
         document.getElementById("cutSceneText")?.setAttribute("style", "display: none;");
+        document.getElementById("cameraView")?.setAttribute("style", "display: block;");
+        document.getElementById("HUD")?.setAttribute("style", "display: block;");
         document.getElementById("gameView")?.setAttribute("style", "display: block;");
         document.getElementById("backgroundCutScene")?.setAttribute("style", "display: none;");
         setNight(night + 1);
@@ -355,8 +360,8 @@ export default function Game() {
     
     return (
     <>
-    <GameHUD />
     <CutsceneView night={night} />
+    <GameHUD />
     <CameraView />
     <Office>
         <OfficeScene

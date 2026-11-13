@@ -21,7 +21,7 @@ export default class DoorSwitch {
         this.light = new Light(this.side);
         this.switch = switchSide;
     }
-    public checkClickPostion(X: number, Y: number, isLightRelease: boolean, isAtDoor: boolean) {
+    public checkClickPostion(X: number, Y: number, isLightRelease: boolean, isAtDoor: boolean): void {
         const button = this.switch.getBoundingClientRect();
         const PosX = X - button.left;
         const PosY = Y - button.top;

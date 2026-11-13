@@ -1,6 +1,7 @@
 
 import camFeed from "../Camera";
 import MoveNode from "./MoveNode";
+import AnimateFrames from "../AnimateFrames";
 
 class Animatronic {
     // Properties
@@ -13,6 +14,7 @@ class Animatronic {
     protected attacking: boolean = false;
     protected pos: MoveNode | undefined;
     protected readonly moveInt: number | undefined;
+    protected readonly anim: AnimateFrames = new AnimateFrames;
 
 
     constructor(difficulty: string, night: number) {
