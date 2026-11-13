@@ -28,9 +28,10 @@ export default function CameraView() {
     </div>
     <div id="cameraSection">
         <img className='camera-scene' id='cameraScene' src=''></img>
-        <div className='camera-map' draggable={false}>
-        <img id='selectedMapButton'/>
         <img className='camera-map-outline' draggable={false} src='/ASSETS/TEXTURES/CAMERA/camera_outline.png'></img>
+        <div className='camera-map' draggable={false}>
+        <img className='camera-name' id='cameraName' draggable={false} src='/ASSETS/TEXTURES/CAMERA/camera_names/show_stage_text.png'></img>
+        <img id='selectedMapButton'/>
         <img className='cam-1a-button' draggable={false} onClick={()=> {camFeed.setCameraFeed("1A");}} src='ASSETS/TEXTURES/CAMERA/camera_buttons/camera_1a_button.png'></img>
         <img className='cam-1b-button' draggable={false} onClick={()=> {camFeed.setCameraFeed("1B");}} src='ASSETS/TEXTURES/CAMERA/camera_buttons/camera_1b_button.png'></img>
         <img className='cam-1c-button' draggable={false} onClick={()=> {camFeed.setCameraFeed("1C");}} src='ASSETS/TEXTURES/CAMERA/camera_buttons/camera_1c_button.png'></img>
