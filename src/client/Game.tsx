@@ -353,7 +353,6 @@ export default function Game() {
     } 
     
     
-    
     return (
     <>
     <GameHUD />
