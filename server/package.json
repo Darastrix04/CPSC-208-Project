@@ -1,0 +1,19 @@
+{
+	"name": "cpsc-208-week13-websocket-demo-server",
+	"version": "1.0.0",
+	"author": "Vargus Fellwroth",
+	"license": "ISC",
+	"scripts": {
+		"compile": "tsc",
+		"serve": "node ./dist/server.js",
+		"compile-serve": "tsc && node ./dist/server.js",
+		"dev": "node ./node_modules/nodemon/bin/nodemon.js -e ts --exec \"npm run compile-serve\""
+	},
+	"devDependencies": {
+		"@types/ws": "^8.18.1",
+		"typescript": "^5.9.3"
+	},
+	"dependencies": {
+		"ws": "^8.18.3"
+	}
+}
