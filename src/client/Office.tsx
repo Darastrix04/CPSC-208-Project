@@ -5,7 +5,7 @@ interface OfficeViewProps {
     children?: ReactNode;
 }
 
-export default function OfficeView({children}: OfficeViewProps) {
+export default function Office({children}: OfficeViewProps) {
     
     const {display} = usePage();
 
