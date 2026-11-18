@@ -4,7 +4,8 @@ import { createRoot } from "react-dom/client";
 import PageProvider from "./PageProvider";
 import GlobalProvider from "./GlobalProvider";
 import "./stylesheets/styles.css";
-
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 
 
@@ -27,3 +28,6 @@ if (main) {
     </React.StrictMode>
     );
 }
+
+
+

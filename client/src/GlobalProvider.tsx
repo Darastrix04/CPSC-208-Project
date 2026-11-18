@@ -13,8 +13,7 @@ const defaultSave = {
     difficulty: "normal",
     volume: 100
 };
-const GlobalProvider = ({ children }: GlobalProvideProps) => {
-const [saveData] = useState(() => {
+const GlobalProvider = ({ children }: GlobalProvideProps) => {const [saveData] = useState(() => {
     try {
         const localSaveData = localStorage.getItem("save");
 
@@ -25,8 +24,13 @@ const [saveData] = useState(() => {
 });
 
     const [night, setNight] = useState(saveData.night);
+    const [maxNight, setMaxNight] = useState(saveData.night);
     const [difficulty, setDifficulty] = useState(saveData.difficulty);
     const [volume, setVolume] = useState(saveData.volume);
+    const [pid, setPid] = useState("");
+    const [selectedLobby, setSelectedLobby] = useState<string | null>(null);
+	const [ws, setWs] = useState<WebSocket>({} as WebSocket);
+	const [clickPid, setClickPid] = useState("");
 
     useEffect(() => {
         const save = {
@@ -39,12 +43,21 @@ const [saveData] = useState(() => {
     }, [night, difficulty, volume]);
 
     const value: GlobalContextType = {
+        pid,
+        setPid,
+        ws, setWs,
+        clickPid,
+        setClickPid,
         night,
         setNight,
         difficulty,
         setDifficulty,
         volume,
-        setVolume
+        setVolume,
+        selectedLobby,
+        setSelectedLobby,
+        maxNight,
+        setMaxNight
     };
 
     return (

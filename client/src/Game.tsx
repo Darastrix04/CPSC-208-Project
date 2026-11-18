@@ -22,19 +22,28 @@ export default function Game() {
     const foxyDmg = useRef(1);
     const leftSwitch = useRef<DoorSwitch | null>(null);
     const rightSwitch = useRef<DoorSwitch | null>(null);
-
-    
     const {setDisplay, display} = usePage();
-    const {night, setNight, difficulty, volume} = useGlobal();
+    const {night, setNight, difficulty, volume, ws, setWs, pid, setPid, clickPid, setClickPid, setMaxNight, maxNight} = useGlobal();
     const {setHr,pause, hr,SECONDS,time, setTime,battery,setBattery, isAtLeftDoor, isAtRightDoor, setAtLeftDoor, setAtRightDoor} = useGame();
 
     const animatronics = useMemo<Animatronic[]>(() => {
         return [new Bonnie(difficulty, night), new Chicka(difficulty, night), new Foxy(difficulty,night), new Freddy(difficulty, night)];
     }, [night, display]);
+
+
+
+
+
+
+
+
+
+
     
     
     //Things that start up once and never again
     useEffect(() => {
+
         const left = document.getElementById("leftSwitch") as HTMLImageElement | null;
         const right = document.getElementById("rightSwitch") as HTMLImageElement | null;
         if (left && right) {
@@ -333,14 +342,19 @@ export default function Game() {
         document.getElementById("gameView")?.setAttribute("style", "display: block;");
         document.getElementById("backgroundCutScene")?.setAttribute("style", "display: none;");
         setNight(night + 1);
+        if(maxNight < (night - 1)) {
+            setMaxNight(night);
+        } 
     };
 
-    function animateStatic() {
+    const animateStatic = () => {
         let frame = 1;
         let repeatFrames = 8; 
         audioHandler.playSFX(audioHandler.SFX.death_static);
         const staticAnim = document.getElementById("staticScene") as HTMLImageElement;
         document.getElementById("gameView")?.setAttribute("style", "display: none;");
+        document.getElementById("HUD")?.setAttribute("style", "display:  none;");
+        document.getElementById("cameraView")?.setAttribute("style", "display: none;");
         staticAnim.setAttribute("style", "display: block;")
         const animationStatic = setInterval(() => {
         staticAnim.src = `/ASSETS/TEXTURES/STATIC/static_${frame}.png`;
@@ -361,14 +375,12 @@ export default function Game() {
     return (
     <>
     <CutsceneView night={night} />
-    <GameHUD />
     <CameraView />
+    <GameHUD />
     <Office>
         <OfficeScene
             leftSwitch={leftSwitch}
             rightSwitch={rightSwitch}
-            isAtLeftDoor={isAtLeftDoor}
-            isAtRightDoor={isAtRightDoor}
         />
     </Office>
     </>

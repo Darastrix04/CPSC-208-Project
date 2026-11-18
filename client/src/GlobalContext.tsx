@@ -9,6 +9,16 @@ export interface GlobalContextType {
     setDifficulty: (difficulty: string) => void;
     volume: number;
     setVolume: (volume: number) => void;
+    pid: string;
+    setPid: (pid: string) => void;
+    ws: WebSocket;
+    setWs: (ws: WebSocket) => void;
+    clickPid: string;
+    setClickPid: (clickPid: string) => void;
+    selectedLobby: string | null;
+    setSelectedLobby: (lobby: string | null) => void;
+    maxNight: number;
+    setMaxNight: (night: number) => void;
 }
 
 const GlobalContext = createContext<GlobalContextType | null>(null);

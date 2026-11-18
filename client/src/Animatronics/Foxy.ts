@@ -33,6 +33,11 @@ class Foxy extends Animatronic{
                 this.aiLvl = 0;
                 break;
         }
+        if(this.difficulty === "easy") {
+            this.aiLvl -= 2;
+        } else if (this.difficulty === "hard") {
+            this.aiLvl += 3;
+        }
     }
 
 

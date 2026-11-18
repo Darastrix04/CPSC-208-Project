@@ -2,6 +2,8 @@
 import Game from "./Game";
 import GameProvider from "./GameProvider";
 import MainMenu from "./MainMenu";
+import MultiPlayer from "./MultiPlayer";
+import MultiPlayerLobby from "./MultiPlayerLobby";
 import Options from "./Options";
 import { Pages, usePage } from "./PageContext";
 
@@ -17,6 +19,7 @@ export default function PageController() {
             return <GameProvider> <Game /> </GameProvider>;
         case Pages.Options:
             return <Options />;
-
+        case Pages.MultiPlayer:
+            return <MultiPlayer />;
     }
 }

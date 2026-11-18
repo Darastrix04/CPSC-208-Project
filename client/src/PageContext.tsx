@@ -4,7 +4,9 @@ import React, { createContext, useContext } from "react";
 enum Pages {
     MainMenu,
     Game,
-    Options
+    Options,
+    MultiPlayer,
+    MultiPlayerLobby
 }
 
 export interface PageContextType {

@@ -61,6 +61,11 @@ function MainMenu() {
                     setDisplay(Pages.Game);}}>CONTINUE</button>           {/*CONTINUE GAME BUTTON*/}
             </div>
             <div className="align-menu-button">
+                <button className="h2 mx-5 my-5 text-white flat-button" id="multiGameButton" onClick={() => {
+                    audioHandler.playSFX(audioHandler.SFX.click);
+                    setDisplay(Pages.MultiPlayer);}}>MULTIPLAYER</button>           {/*MULTIPLAYER GAME BUTTON*/}
+            </div>
+            <div className="align-menu-button">
                 <button className="h2 mx-5 my-5 text-white flat-button" id="optionsButton" onClick={() => {
                     audioHandler.playSFX(audioHandler.SFX.click);
                     setDisplay(Pages.Options);}}>OPTIONS</button>             {/*OPTIONS BUTTON*/}
