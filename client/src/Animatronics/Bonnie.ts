@@ -32,6 +32,15 @@ class Bonnie extends Animatronic{
                 this.aiLvl = 0;
                 break;
         }
+
+        if(this.difficulty === "easy") {
+            this.aiLvl -= 2;
+        } else if (this.difficulty === "hard") {
+            this.aiLvl += 3;
+        }
+
+
+
         const room1A = new MoveNode("1A", "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_everyone.png");
         const room1B = new MoveNode("1B", "ASSETS/TEXTURES/CAMERA/dining_area/dining_area_bonnie_1.png");
         const room5 = new MoveNode("5", "ASSETS/TEXTURES/CAMERA/backstage/backstage_bonnie.png");

@@ -30,6 +30,11 @@ class Freddy extends Animatronic{
                 this.aiLvl = 0;
                 break;
         }
+        if(this.difficulty === "easy") {
+            this.aiLvl -= 2;
+        } else if (this.difficulty === "hard") {
+            this.aiLvl += 3;
+        }
         const room1A = new MoveNode("1A", "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_freddy.png");
         const room1B = new MoveNode("1B", "ASSETS/TEXTURES/CAMERA/dining_area/dining_area_freddy.png");
         const room7 = new MoveNode("7", "ASSETS/TEXTURES/CAMERA/restrooms/restrooms_freddy.png");

@@ -1,17 +1,19 @@
 
 import {type RefObject } from "react";
 import DoorSwitch from "./DoorSwitch";
+import { useGame } from "./GameContext";
 
 interface OfficeSceneProps {
     leftSwitch: RefObject<DoorSwitch | null>;
     rightSwitch: RefObject<DoorSwitch | null>;
-    isAtLeftDoor: boolean;
-    isAtRightDoor: boolean;
 }
 
 
 
-export default function OfficeScene({leftSwitch, rightSwitch, isAtLeftDoor, isAtRightDoor}: OfficeSceneProps) {
+
+export default function OfficeScene({leftSwitch, rightSwitch}: OfficeSceneProps) {
+
+    const {isAtLeftDoor, isAtRightDoor} = useGame();
 
     return (
         <>

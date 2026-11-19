@@ -31,6 +31,11 @@ class Chicka extends Animatronic{
                 this.aiLvl = 0;
                 break;
         }
+        if(this.difficulty === "easy") {
+            this.aiLvl -= 2;
+        } else if (this.difficulty === "hard") {
+            this.aiLvl += 3;
+        }
         const room1A = new MoveNode("1A", "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_everyone.png");
         const room1B = new MoveNode("1B", "ASSETS/TEXTURES/CAMERA/dining_area/dining_area_chica_1.png");
         const room7 = new MoveNode("7", "ASSETS/TEXTURES/CAMERA/restrooms/restrooms_chica_2.png");

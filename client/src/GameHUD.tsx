@@ -5,8 +5,7 @@ import { useGlobal } from "./GlobalContext";
 export default function GameHUD() {
     const {battery, hr} = useGame();
     const {night} = useGlobal();
-
-
+    
     return(
     <div id="HUD">
     <div className="battery-bar-container" id="batteryBar">
