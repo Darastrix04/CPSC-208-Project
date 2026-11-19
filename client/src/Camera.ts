@@ -88,6 +88,84 @@ class Camera {
     public setCameraFeed(cam: string) {
         if (cam != this.lastCam) {
             audioHandler.playSFX(audioHandler.SFX.cam_switch);
+            const cameraName = document.getElementById("cameraName") as HTMLImageElement;
+            switch (cam) {
+                case "1A":
+                    cameraName.src = "ASSETS/TEXTURES/CAMERA/camera_names/show_stage_text.png";
+                    break;
+                case "1B":
+                    cameraName.src = "ASSETS/TEXTURES/CAMERA/camera_names/dining_area_text.png";
+                    break;
+                case "1C":
+                    cameraName.src = "ASSETS/TEXTURES/CAMERA/camera_names/pirate_cove_text.png";
+                    break;
+                case "2A":
+                    cameraName.src = "ASSETS/TEXTURES/CAMERA/camera_names/west_hall_text.png";
+                    break;
+                case "2B":
+                    cameraName.src = "ASSETS/TEXTURES/CAMERA/camera_names/w_hall_corner_text.png";
+                    switch (Math.floor(Math.random() * 10)) {
+                        case 0:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/w_hall_corner/w_hall_corner_spooky.png");
+                            break;
+                        default:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/w_hall_corner/w_hall_corner_empty.png");
+                    }
+                    break;
+                case "3":
+                    cameraName.src = "ASSETS/TEXTURES/CAMERA/camera_names/supply_closet_text.png";
+                    break;
+                case "4A":
+                    cameraName.src = "ASSETS/TEXTURES/CAMERA/camera_names/east_hall_text.png";
+                    switch (Math.floor(Math.random() * 10)) {
+                        case 0: 
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/east_hall/east_hall_spooky_1.png");
+                            break;
+                        case 1:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/east_hall/east_hall_spooky_2.png");
+                            break;
+                        default:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/east_hall/east_hall_empty.png");
+                    }
+                    break;
+                case "4B":
+                    cameraName.src = "ASSETS/TEXTURES/CAMERA/camera_names/e_hall_corner_text.png";
+                    switch (Math.floor(Math.random() * 10)) {
+                        case 0:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/e_hall_corner/e_hall_corner_lore_1.png");
+                            break;
+                        case 1:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/e_hall_corner/e_hall_corner_lore_2.png");
+                            break;
+                        case 2:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/e_hall_corner/e_hall_corner_lore_3.png");
+                            break;
+                        case 3:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/e_hall_corner/e_hall_corner_lore_4.png");
+                            break;
+                        default:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/e_hall_corner/e_hall_corner_empty.png");
+                    }
+                    break;
+                case "5":
+                    cameraName.src = "ASSETS/TEXTURES/CAMERA/camera_names/backstage_text.png";
+                    switch (Math.floor(Math.random() * 10)) {
+                        case 0:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/backstage/backstage_spooky.png");
+                            break;
+                        default:
+                            this.cameras.set(cam, "ASSETS/TEXTURES/CAMERA/backstage/backstage_empty.png");
+                    }
+                    break;
+                case "6":
+                    cameraName.src = "ASSETS/TEXTURES/CAMERA/camera_names/kitchen_text.png";
+                    break;
+                case "7":
+                    cameraName.src = "ASSETS/TEXTURES/CAMERA/camera_names/restrooms_text.png";
+                    break;
+                default:
+                    break;
+            }
         }
             this.lastCam = cam;
             const cameraMonitor = document.getElementById("cameraScene") as HTMLImageElement;
