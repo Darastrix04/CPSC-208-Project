@@ -33,6 +33,7 @@ class Camera {
         }
         cameraSection.style.display = "block";
         cameraSection.style.visibility = "visible";
+        cameraMonitor.classList.remove("camera-pan");
         if (cameraMap) { 
             cameraMap.style.visibility = "hidden";
         }
@@ -43,6 +44,7 @@ class Camera {
             if (frame > 10) {
                 clearInterval(animation);
                 cameraMonitor.src = this.getCamFeed(this.lastCam) ?? "";
+                this.startCameraPan(cameraMonitor);
                 if (cameraMap) {
                     cameraMap.style.visibility = "visible";
                 } 
@@ -60,6 +62,7 @@ class Camera {
         if (cameraMap) {
             cameraMap.style.visibility = "hidden";
         }
+        cameraMonitor.classList.remove("camera-pan");
         let frame = 10;
         const animation = setInterval(() => {
             cameraMonitor.src = `/ASSETS/TEXTURES/CAMERA/cam_flippa_annimation/camera_flip_${frame}.png`
@@ -169,6 +172,7 @@ class Camera {
         }
             this.lastCam = cam;
             const cameraMonitor = document.getElementById("cameraScene") as HTMLImageElement;
+            cameraMonitor.classList.remove("camera-pan");
             if (cam === "6" && camFeed.getCamFeed("6") !== "ASSETS/TEXTURES/OFFICE/office_bottom_layer.png") {
                 cameraMonitor.src = "ASSETS/TEXTURES/OFFICE/office_bottom_layer.png";
                 if(this.getCamFeed("6") === "ASSETS/SFX/cameras/kitchen/sfx_fumbling_kitchen_short.mp3") {
@@ -185,6 +189,9 @@ class Camera {
                     if (frame > 29) {
                         clearInterval(animation);
                         cameraMonitor.src = this.getCamFeed(this.lastCam) ?? "";
+                        if (this.isUsingCam) {
+                            this.startCameraPan(cameraMonitor);
+                        }
                     }
                 }, 20);
                 this.setFoxyRun(false);
@@ -192,8 +199,19 @@ class Camera {
                 audioHandler.stopSFX(audioHandler.SFX.chica_kitchen_audio);
                 audioHandler.stopSFX(audioHandler.SFX.freddy_kitchen_audio);
                 cameraMonitor.src = this.cameras.get(cam) ?? "ASSETS/TEXTURES/CAMERA/show_stage/show_stage_everyone.png";
+                if (this.isUsingCam) {
+                    this.startCameraPan(cameraMonitor);
+                }
             }
     }
+
+    private startCameraPan(cameraMonitor: HTMLImageElement): void {
+        // Restart the animation so each selected camera begins its pan from the same edge.
+        cameraMonitor.classList.remove("camera-pan");
+        void cameraMonitor.offsetWidth;
+        cameraMonitor.classList.add("camera-pan");
+    }
+
     public updateCamFeed(cam: string, src: string) {
         this.cameras.set(cam, src);
         if(cam === this.lastCam && cam !== "1A") {

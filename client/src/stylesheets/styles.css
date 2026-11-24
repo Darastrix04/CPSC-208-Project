@@ -127,15 +127,34 @@
 }
 .camera-scene {
     position: absolute;
-    width: 100%;
+    width: auto;
     height: 100%;
-    margin-left: 0px;
-    padding-left: 0px;
+    max-width: none;
+    left: 0;
+    top: 0;
+    margin-left: 0;
+    padding-left: 0;
     background: transparent;
-    background-image: "ASSETS/TEXTURES/OFFICE/office_top_layer.png";
     user-select: none;
-    object-fit: cover;
     z-index: 1;
+}
+
+/*
+ * Camera backgrounds are 1600x720 (2.222:1). Keeping their height at
+ * 100% lets the extra width extend beyond the screen, like the original FNAF
+ * camera feeds. The animation slowly sweeps across that extra image area.
+ */
+.camera-scene.camera-pan {
+    animation: camera-pan 18s ease-in-out infinite alternate;
+}
+
+@keyframes camera-pan {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(min(0px, calc(100vw - 222.222vh)));
+    }
 }
 .camera-map {
     position: absolute;
